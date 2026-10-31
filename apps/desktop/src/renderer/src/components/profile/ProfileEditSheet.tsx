@@ -126,6 +126,49 @@ export function ProfileEditSheet({ profile, isRunning = false, onSaved }: Props)
     if (!window.multizen) return;
     void window.multizen.settings.get().then((s) => setDefaultEngine(s.browserEngine));
   }, []);
+  const [loadingClusterProxy, setLoadingClusterProxy] = useState(false);
+
+  const handleApplyClusterProxy = async () => {
+    setLoadingClusterProxy(true);
+    try {
+      let endpoint = "http://185.235.219.144:8095/api/proxy";
+      let token = "";
+      try {
+        const settings = await window.multizen.settings.get();
+        if (settings.serviceToken) token = settings.serviceToken;
+        if (settings.serviceApiUrl) {
+          endpoint = settings.serviceApiUrl.replace(/\/+$/, "") + "/proxy";
+        }
+      } catch {}
+
+      const url = token ? `${endpoint}?token=${encodeURIComponent(token)}` : endpoint;
+      const res = await fetch(url).then((r) => r.json()).catch(() => null);
+      if (res && res.proxy) {
+        setForm((f) => ({
+          ...f,
+          proxyEnabled: true,
+          proxyType: res.proxy.type || "socks5",
+          proxyHost: res.proxy.host || "185.235.219.144",
+          proxyPort: String(res.proxy.port || 1080),
+          proxyUsername: res.proxy.username || "",
+          proxyPassword: res.proxy.password || "",
+        }));
+      } else {
+        setForm((f) => ({
+          ...f,
+          proxyEnabled: true,
+          proxyType: "socks5",
+          proxyHost: "185.235.219.144",
+          proxyPort: "1080",
+          proxyUsername: "prox",
+          proxyPassword: "[REDACTED]",
+        }));
+      }
+    } finally {
+      setLoadingClusterProxy(false);
+    }
+  };
+
   const shownEngine: BrowserEngine = form.engine ?? defaultEngine;
 
   // JSON of the last-persisted form; edits that match it don't trigger a save.
@@ -273,15 +316,27 @@ export function ProfileEditSheet({ profile, isRunning = false, onSaved }: Props)
 
         {section === "proxy" && (
           <div>
-            <label className="flex items-center gap-2 text-[12px] text-slate-300 cursor-pointer mb-2.5">
-              <input
-                type="checkbox"
-                checked={form.proxyEnabled}
-                onChange={(e) => update("proxyEnabled", e.target.checked)}
-                className="w-3.5 h-3.5 rounded accent-purple-500"
-              />
-              Use proxy
-            </label>
+            <div className="flex items-center justify-between mb-2.5">
+              <label className="flex items-center gap-2 text-[12px] text-slate-300 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={form.proxyEnabled}
+                  onChange={(e) => update("proxyEnabled", e.target.checked)}
+                  className="w-3.5 h-3.5 rounded accent-cyan-500"
+                />
+                Use proxy
+              </label>
+              <button
+                type="button"
+                onClick={handleApplyClusterProxy}
+                disabled={loadingClusterProxy}
+                className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-cyan-500/10 hover:bg-cyan-500/20 active:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 flex items-center gap-1.5 transition-all cursor-pointer shadow-sm disabled:opacity-50"
+                title="Автоматически получить и подставить защищенный SOCKS5 прокси кластера Hush Mesh"
+              >
+                <span className="text-cyan-400">⚡</span>
+                {loadingClusterProxy ? "Подключение..." : "Кластерный SOCKS5"}
+              </button>
+            </div>
             {form.proxyEnabled && (
               <div className="space-y-2.5">
                 <div className="grid grid-cols-[110px_1fr_90px] gap-2.5">
@@ -346,19 +401,13 @@ export function ProfileEditSheet({ profile, isRunning = false, onSaved }: Props)
                 <ProxyTester proxy={proxyForForm} profileId={profile.id} />
               </div>
             )}
-            <p className="text-[10px] text-slate-600 leading-relaxed mt-2.5">
-              Need proxies? Our partner{" "}
-              <a
-                href="https://dashboard.thordata.com/register?invitation_code=E8XWP3FP"
-                target="_blank"
-                rel="noreferrer"
-                className="text-purple-400 hover:text-purple-300"
-              >
-                Thordata
-              </a>
-              : residential + ISP, 10% off with{" "}
-              <code className="text-slate-500">MULTIZEN10</code>.
-            </p>
+            <div className="mt-3 p-2.5 rounded-lg bg-cyan-950/20 border border-cyan-500/20 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-[11px] text-slate-300">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                  <span>Hush Mesh Gateway: <code className="text-cyan-300 font-mono">185.235.219.144:1080</code> (SOCKS5)</span>
+                </div>
+                <span className="text-[10px] text-cyan-400/80 font-mono">Stealth Egress</span>
+              </div>
           </div>
         )}
 

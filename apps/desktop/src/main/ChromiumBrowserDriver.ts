@@ -55,6 +55,7 @@ class SandboxStartupError extends Error {}
  */
 function fallbackNeedsNoSandbox(): boolean {
   if (process.platform !== "linux") return false;
+  if ((typeof process.getuid === "function" && process.getuid() === 0) || process.argv.includes("--no-sandbox")) return true;
   // A --no-sandbox on the HOST process (e.g. the AppImage boot flag on Ubuntu
   // 24.04) is deliberately NOT forwarded here: the engine decision is driven by
   // the actual kernel restriction below, and the crash backstop is the net.
@@ -314,14 +315,16 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
     // resolver failure can never dead-launch. `--no-sandbox` is NOT added to the
     // args literal below; it's applied at spawn time so the crash backstop can
     // relaunch with it without rebuilding the args.
-    let noSandbox: boolean;
-    try {
-      noSandbox = this.resolveSandboxDecision
-        ? (await this.resolveSandboxDecision({ engine, binaryPath: chromiumPath })).noSandbox
-        : fallbackNeedsNoSandbox();
-    } catch (e) {
-      console.warn("[multizen] sandbox resolver failed; using fallback:", (e as Error).message);
-      noSandbox = fallbackNeedsNoSandbox();
+    let noSandbox: boolean = (typeof process.getuid === "function" && process.getuid() === 0) || process.argv.includes("--no-sandbox");
+    if (!noSandbox) {
+      try {
+        noSandbox = this.resolveSandboxDecision
+          ? (await this.resolveSandboxDecision({ engine, binaryPath: chromiumPath })).noSandbox
+          : fallbackNeedsNoSandbox();
+      } catch (e) {
+        console.warn("[multizen] sandbox resolver failed; using fallback:", (e as Error).message);
+        noSandbox = fallbackNeedsNoSandbox();
+      }
     }
 
     const acceptLangPlain = fp.languages.join(",");

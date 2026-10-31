@@ -72,6 +72,30 @@ export function Settings({ onImport }: Props): JSX.Element {
     setSettings(next);
   }
 
+  const [gatewayStatus, setGatewayStatus] = useState<string | null>(null);
+  const [gatewayTesting, setGatewayTesting] = useState(false);
+
+  async function checkGateway(): Promise<void> {
+    setGatewayTesting(true);
+    setGatewayStatus(null);
+    const start = performance.now();
+    try {
+      const base = settings?.serviceApiUrl?.replace(/\/+$/, "") || "http://185.235.219.144:8095/api";
+      const res = await fetch(`${base}/health`, { signal: AbortSignal.timeout(3000) });
+      const lat = Math.round(performance.now() - start);
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setGatewayStatus(`online (${lat}ms, ${data.service || "hush-cp"})`);
+      } else {
+        setGatewayStatus(`HTTP ${res.status}`);
+      }
+    } catch (e: any) {
+      setGatewayStatus(`offline: ${e.message || "timeout"}`);
+    } finally {
+      setGatewayTesting(false);
+    }
+  }
+
   async function checkForUpdates(): Promise<void> {
     await window.multizen.update.check();
     setLastChecked(await window.multizen.update.lastChecked());
@@ -416,30 +440,58 @@ export function Settings({ onImport }: Props): JSX.Element {
 
         <Row
           icon={<ShieldCheck size={16} strokeWidth={1.5} />}
-          title="Сервис прокси & Токен"
-          desc="Авторизация по токену из Telegram-бота, автосинхронизация прокси и статус сессии."
+          title="Сервер управления & Прокси кластера"
+          desc="Лицензионный токен клиента, шлюз управления Hush Mesh и автоподтягивание SOCKS5 прокси."
         >
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             <div>
               <label className="block text-[11px] text-slate-400 mb-1">
-                Персональный токен сервиса
+                Персональный токен лицензии / сервиса
               </label>
               <input
                 type="text"
                 value={settings.serviceToken ?? ""}
                 onChange={(e) => void patch({ serviceToken: e.target.value.trim() })}
-                placeholder="prx_live_..."
-                className="w-full max-w-md px-3 py-1.5 text-[12px] bg-slate-900 border border-slate-800 rounded-lg text-slate-200 font-mono focus:outline-none focus:border-purple-500"
+                placeholder="hush_live_... или токен из Telegram-бота"
+                className="w-full max-w-md px-3 py-1.5 text-[12px] bg-slate-900 border border-slate-800 rounded-lg text-slate-200 font-mono focus:outline-none focus:border-cyan-500"
               />
+            </div>
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1">
+                URL шлюза кластера (Hush Control Plane)
+              </label>
+              <div className="flex items-center gap-2 flex-wrap">
+                <input
+                  type="text"
+                  value={settings.serviceApiUrl ?? "http://185.235.219.144:8095/api"}
+                  onChange={(e) => void patch({ serviceApiUrl: e.target.value.trim() })}
+                  placeholder="http://185.235.219.144:8095/api"
+                  className="w-full max-w-md px-3 py-1.5 text-[12px] bg-slate-900 border border-slate-800 rounded-lg text-slate-200 font-mono focus:outline-none focus:border-cyan-500"
+                />
+                <button
+                  type="button"
+                  onClick={() => void checkGateway()}
+                  disabled={gatewayTesting}
+                  className="px-3 py-1.5 text-[12px] rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition-colors"
+                >
+                  {gatewayTesting ? "Проверка..." : "Проверить связь"}
+                </button>
+                {gatewayStatus && (
+                  <span className={`text-[12px] font-mono ${gatewayStatus.startsWith("online") ? "text-emerald-400" : "text-rose-400"}`}>
+                    {gatewayStatus.startsWith("online") ? "● " : "▲ "}
+                    {gatewayStatus}
+                  </span>
+                )}
+              </div>
             </div>
             <label className="flex items-center gap-2.5 text-[12px] text-slate-400 cursor-pointer">
               <input
                 type="checkbox"
                 checked={settings.usageReporting}
                 onChange={(e) => void patch({ usageReporting: e.target.checked })}
-                className="w-3.5 h-3.5 rounded accent-purple-500"
+                className="w-3.5 h-3.5 rounded accent-cyan-500"
               />
-              Отправлять статус активности и доступности прокси на сервер
+              Отправлять зашифрованный heartbeat и статус профилей на шлюз
             </label>
           </div>
         </Row>
