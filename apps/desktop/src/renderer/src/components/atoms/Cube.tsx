@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * Brand mark — the 3D-ish cube with orange→pink→purple→blue gradient.
+ * Brand mark — the Hush Browser emblem with stealth cyan→purple gradient.
  * Renders the bundled PNG asset; falls back to a CSS gradient div.
  */
 export function Cube({ size = 28, glow = true, className }: Props): JSX.Element {
@@ -27,7 +27,7 @@ export function Cube({ size = 28, glow = true, className }: Props): JSX.Element 
       style={{
         display: "block",
         flexShrink: 0,
-        filter: glow ? `drop-shadow(0 ${size * 0.15}px ${size * 0.5}px rgba(255, 61, 138, 0.35))` : undefined,
+        filter: glow ? `drop-shadow(0 ${size * 0.15}px ${size * 0.5}px rgba(56, 189, 248, 0.45))` : undefined,
       }}
     />
   );
