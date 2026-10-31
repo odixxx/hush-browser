@@ -158,7 +158,7 @@ function fetchJson(url: string, agent: HttpsProxyAgent<string> | SocksProxyAgent
         agent,
         method: "GET",
         headers: {
-          "user-agent": "MultiZen/0.3 (proxy-geo-probe)",
+          "user-agent": "Hush Browser/0.3 (proxy-geo-probe)",
           accept: "application/json",
         },
       },

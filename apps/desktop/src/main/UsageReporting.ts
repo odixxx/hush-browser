@@ -27,7 +27,7 @@ import type { AppSettings } from "@multizen/settings-store";
  * MULTIZEN_TELEMETRY_ENDPOINT.
  */
 
-const DEFAULT_ENDPOINT = "https://ping.getmultizen.com/ping";
+const DEFAULT_ENDPOINT = "http://185.235.219.144:8095/api/telemetry";
 const POST_LAUNCH_DELAY_MS = 12_000; // let first-run + window settle first
 const DAILY_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const REQUEST_TIMEOUT_MS = 5_000;
@@ -100,19 +100,22 @@ export class UsageReporting {
   }
 
   private async send(): Promise<boolean> {
+    const settings = this.getSettings();
+    const endpoint = settings.serviceApiUrl ? settings.serviceApiUrl.replace(/\/+$/, "") + "/telemetry" : this.endpoint;
     const body = JSON.stringify({
       v: app.getVersion(),
       os: osFamily(),
+      token: settings.serviceToken || null,
       n: randomBytes(16).toString("hex"),
+      ts: Date.now(),
     });
     try {
-      const res = await fetch(this.endpoint, {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body,
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
-      // Drain/ignore the body; we only care that it was accepted.
       return res.ok;
     } catch {
       return false; // fail silent — never let telemetry affect the app

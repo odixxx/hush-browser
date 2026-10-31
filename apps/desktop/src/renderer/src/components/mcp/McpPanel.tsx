@@ -31,7 +31,7 @@ export function McpPanel({ events, profiles, mcpUrl, mcpToken }: Props): JSX.Ele
         </div>
         <div className="text-[13px] text-slate-500 mb-5 leading-relaxed max-w-[68ch]">
           Drive your profiles from an AI agent. Point any MCP client (Claude Desktop, Cursor,
-          Cline, …) at MultiZen, then launch a profile and let the agent open tabs, click, type,
+          Cline, …) at Hush Browser, then launch a profile and let the agent open tabs, click, type,
           and read pages through it — every tool call streams into the feed below.
         </div>
 
@@ -97,7 +97,7 @@ function ConnectCard({
   const jsonConfig = useMemo(
     () =>
       JSON.stringify(
-        { mcpServers: { multizen: { url: httpUrl, headers: { Authorization: `Bearer ${bearer}` } } } },
+        { mcpServers: { hush: { url: httpUrl, headers: { Authorization: `Bearer ${bearer}` } } } },
         null,
         2,
       ),
@@ -105,7 +105,7 @@ function ConnectCard({
   );
   const codexConfig = useMemo(
     () =>
-      `[mcp_servers.multizen]\nurl = "${httpUrl}"\nhttp_headers = { Authorization = "Bearer ${bearer}" }`,
+      `[mcp_servers.hush]\nurl = "${httpUrl}"\nhttp_headers = { Authorization = "Bearer ${bearer}" }`,
     [httpUrl, bearer],
   );
   const stdioConfig = useMemo(
@@ -113,7 +113,7 @@ function ConnectCard({
       JSON.stringify(
         {
           mcpServers: {
-            multizen: {
+            hush: {
               command: "npx",
               args: ["mcp-remote", httpUrl, "--header", `Authorization: Bearer ${bearer}`],
             },
@@ -130,7 +130,7 @@ function ConnectCard({
   const llmPrompt = useMemo(
     () =>
       [
-        "I'm using the MultiZen browser, which runs a local MCP server so an AI agent can drive its browser profiles (open tabs, click, type, read pages).",
+        "I'm using the Hush Browser, which runs a local MCP server so an AI agent can drive its browser profiles (open tabs, click, type, read pages).",
         "",
         `It exposes a Streamable HTTP MCP endpoint at: ${httpUrl}`,
         `(A legacy HTTP+SSE endpoint is also available at ${sseUrl} for older clients.)`,
@@ -139,13 +139,13 @@ function ConnectCard({
         "",
         "Please connect this MCP server to my MCP client:",
         "1. Detect which MCP client I'm using and where its config file lives.",
-        '2. Add a server named "multizen" using the shape that matches my client, INCLUDING the Authorization header:',
-        `   - Codex CLI (~/.codex/config.toml):  [mcp_servers.multizen] with  url = "${httpUrl}"  and  http_headers = { Authorization = "Bearer ${bearer}" }`,
-        `   - JSON URL clients (Cursor, Cline, Continue, VS Code):  {"mcpServers":{"multizen":{"url":"${httpUrl}","headers":{"Authorization":"Bearer ${bearer}"}}}}`,
-        `   - Stdio-only clients (Claude Desktop, no url field) bridge via mcp-remote (needs Node.js):  {"mcpServers":{"multizen":{"command":"npx","args":["mcp-remote","${httpUrl}","--header","Authorization: Bearer ${bearer}"]}}}`,
+        '2. Add a server named "hush" using the shape that matches my client, INCLUDING the Authorization header:',
+        `   - Codex CLI (~/.codex/config.toml):  [mcp_servers.hush] with  url = "${httpUrl}"  and  http_headers = { Authorization = "Bearer ${bearer}" }`,
+        `   - JSON URL clients (Cursor, Cline, Continue, VS Code):  {"mcpServers":{"hush":{"url":"${httpUrl}","headers":{"Authorization":"Bearer ${bearer}"}}}}`,
+        `   - Stdio-only clients (Claude Desktop, no url field) bridge via mcp-remote (needs Node.js):  {"mcpServers":{"hush":{"command":"npx","args":["mcp-remote","${httpUrl}","--header","Authorization: Bearer ${bearer}"]}}}`,
         "3. Merge it into the existing config without overwriting other servers, then tell me to restart/reload the client.",
         "",
-        'Once connected, every MultiZen tool is prefixed "multizen." — I\'ll launch a profile in MultiZen and you can drive it.',
+        'Once connected, every Hush Browser tool is prefixed "hush." — I\'ll launch a profile in Hush Browser and you can drive it.',
       ].join("\n"),
     [httpUrl, sseUrl, bearer],
   );
@@ -423,7 +423,7 @@ function PageRow({
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">
           <code className="mono text-[12px] font-semibold text-slate-100">
-            <span className="text-purple-400">multizen.</span>
+            <span className="text-purple-400">hush.</span>
             {event.tool}
           </code>
           <span className="ml-auto mono text-[10px] text-slate-500">

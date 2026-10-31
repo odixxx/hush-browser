@@ -145,9 +145,9 @@ function createWindow(): void {
 
 // Name must be set BEFORE app.whenReady() so the dock and menu bar pick
 // it up — otherwise macOS shows "Electron" until app fully loads.
-app.setName("MultiZen");
+app.setName("Hush Browser");
 app.setAboutPanelOptions({
-  applicationName: "MultiZen",
+  applicationName: "Hush Browser",
   applicationVersion: app.getVersion(),
 });
 
@@ -276,7 +276,7 @@ app.whenReady().then(async () => {
         cancelId: 1,
         message: "Enable the secure browser sandbox?",
         detail:
-          "This Linux kernel blocks the browser's sandbox. MultiZen can re-enable it for " +
+          "This Linux kernel blocks the browser's sandbox. Hush Browser can re-enable it for " +
           "just this browser with a one-time system authorization (you will be asked for " +
           "your password). Otherwise the browser launches without its sandbox.",
       });
@@ -314,7 +314,7 @@ app.whenReady().then(async () => {
         const profile = profileManager.get(profileId);
         const choice = await dialog.showMessageBox(mainWindow!, {
           type: "question",
-          buttons: ["Add to MultiZen", "Cancel"],
+          buttons: ["Add to Hush Browser", "Cancel"],
           defaultId: 0,
           cancelId: 1,
           message: "Add this extension to the profile?",
@@ -688,7 +688,7 @@ app.whenReady().then(async () => {
       const result = await dialog.showSaveDialog(mainWindow ?? undefined!, {
         title: "Export profile",
         defaultPath: `${profile.name.replace(/[^a-z0-9-_]+/gi, "_")}.mzar`,
-        filters: [{ name: "MultiZen archive", extensions: ["mzar"] }],
+        filters: [{ name: "Hush Browser archive", extensions: ["hushar", "mzar"] }],
       });
       if (result.canceled || !result.filePath) return { ok: false, reason: "cancelled" };
       // Bundle the profile's shared-store extensions so importing on another
@@ -710,7 +710,7 @@ app.whenReady().then(async () => {
     async (_e, passphrase: string): Promise<{ ok: true; id: string } | { ok: false; reason: string }> => {
       const result = await dialog.showOpenDialog(mainWindow ?? undefined!, {
         title: "Import profile",
-        filters: [{ name: "MultiZen archive", extensions: ["mzar"] }],
+        filters: [{ name: "Hush Browser archive", extensions: ["hushar", "mzar"] }],
         properties: ["openFile"],
       });
       if (result.canceled || result.filePaths.length === 0) {
@@ -740,7 +740,7 @@ app.whenReady().then(async () => {
           void dialog.showMessageBox(mainWindow ?? undefined!, {
             type: "info",
             message: "Engine not available",
-            detail: `This profile was exported with an engine this version of MultiZen doesn't have (${String(recordedEngine)}). It will run on your default engine instead.`,
+            detail: `This profile was exported with an engine this version of Hush Browser doesn't have (${String(recordedEngine)}). It will run on your default engine instead.`,
           });
         }
         // Insert the row verbatim so the DB entry points at the restored files
@@ -779,7 +779,7 @@ app.whenReady().then(async () => {
   const detail = e instanceof Error ? (e.stack ?? e.message) : String(e);
   process.stderr.write(`[multizen] fatal startup error:\n${detail}\n`);
   dialog.showErrorBox(
-    "MultiZen failed to start",
+    "Hush Browser failed to start",
     `A startup step failed:\n\n${e instanceof Error ? e.message : String(e)}\n\n` +
       "Please report this on Discord/GitHub with this message.",
   );

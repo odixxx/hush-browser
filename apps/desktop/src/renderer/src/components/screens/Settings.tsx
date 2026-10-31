@@ -118,7 +118,7 @@ export function Settings({ onImport }: Props): JSX.Element {
       <div className="max-w-[720px] mx-auto">
         <div className="text-lg font-bold tracking-tight text-slate-100 mb-1.5">Settings</div>
         <div className="text-[13px] text-slate-500 mb-5">
-          MCP server, archives, build info. Configuration is local — MultiZen does not call any
+          MCP server, archives, build info. Configuration is local — Hush Browser does not call any
           external API on your behalf.
         </div>
 
@@ -285,7 +285,7 @@ export function Settings({ onImport }: Props): JSX.Element {
           <Row
             icon={<ShieldAlert size={16} strokeWidth={1.5} />}
             title="Linux browser sandbox"
-            desc="This kernel restricts the browser's sandbox. MultiZen can re-enable it for just this browser with a one-time system authorization — the sandbox stays on with no warning banner."
+            desc="This kernel restricts the browser's sandbox. Hush Browser can re-enable it for just this browser with a one-time system authorization — the sandbox stays on with no warning banner."
           >
             <div className="flex items-center gap-2.5 flex-wrap">
               {sandbox.state === "active" ? (
@@ -382,7 +382,7 @@ export function Settings({ onImport }: Props): JSX.Element {
           desc={
             info?.platform === "darwin"
               ? "Auto-install isn't available on macOS yet — we'll notify you in-app to download the new version."
-              : "MultiZen checks for updates in the background and installs them on restart."
+              : "Hush Browser checks for updates in the background and installs them on restart."
           }
         >
           <div className="flex items-center gap-2.5 flex-wrap">
@@ -416,30 +416,37 @@ export function Settings({ onImport }: Props): JSX.Element {
 
         <Row
           icon={<ShieldCheck size={16} strokeWidth={1.5} />}
-          title="Anonymous usage"
-          desc="Off by default. Help gauge how many people run MultiZen."
+          title="Сервис прокси & Токен"
+          desc="Авторизация по токену из Telegram-бота, автосинхронизация прокси и статус сессии."
         >
-          <label className="flex items-center gap-2.5 text-[12px] text-slate-400 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={settings.usageReporting}
-              onChange={(e) => void patch({ usageReporting: e.target.checked })}
-              className="w-3.5 h-3.5 rounded accent-purple-500"
-            />
-            Send an anonymous daily heartbeat
-          </label>
-          <div className="text-[11px] text-slate-600 mt-2 leading-relaxed">
-            When on, sends once a day: app version, OS family, and a random
-            single-use token — <b>no</b> account, <b>no</b> persistent ID, and your IP is
-            never stored (a coarse country is derived server-side then discarded). No
-            profiles, proxies, or browsing are ever included. Set{" "}
-            <code className="text-slate-500">MULTIZEN_NO_TELEMETRY=1</code> to force it off.
+          <div className="space-y-3">
+            <div>
+              <label className="block text-[11px] text-slate-400 mb-1">
+                Персональный токен сервиса
+              </label>
+              <input
+                type="text"
+                value={settings.serviceToken ?? ""}
+                onChange={(e) => void patch({ serviceToken: e.target.value.trim() })}
+                placeholder="prx_live_..."
+                className="w-full max-w-md px-3 py-1.5 text-[12px] bg-slate-900 border border-slate-800 rounded-lg text-slate-200 font-mono focus:outline-none focus:border-purple-500"
+              />
+            </div>
+            <label className="flex items-center gap-2.5 text-[12px] text-slate-400 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={settings.usageReporting}
+                onChange={(e) => void patch({ usageReporting: e.target.checked })}
+                className="w-3.5 h-3.5 rounded accent-purple-500"
+              />
+              Отправлять статус активности и доступности прокси на сервер
+            </label>
           </div>
         </Row>
 
         <Row icon={<Sparkles size={16} strokeWidth={1.5} />} title="About" desc="">
           <div className="mono text-[12px] text-slate-400 leading-relaxed">
-            MultiZen v{info?.appVersion ?? "0.0.0"} · {info?.platform ?? "—"} · Electron{" "}
+            Hush Browser v{info?.appVersion ?? "0.0.0"} · {info?.platform ?? "—"} · Electron{" "}
             {electronVersion()}
           </div>
         </Row>

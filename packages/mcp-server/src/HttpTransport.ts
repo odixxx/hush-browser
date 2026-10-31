@@ -138,7 +138,7 @@ export class HttpTransport {
 
     if (url === "/healthz") {
       res.writeHead(200, { "content-type": "application/json" }).end(
-        JSON.stringify({ ok: true, name: "multizen-mcp", connected: this.sseTransport !== null }),
+        JSON.stringify({ ok: true, name: "hush-mcp", connected: this.sseTransport !== null }),
       );
       return;
     }

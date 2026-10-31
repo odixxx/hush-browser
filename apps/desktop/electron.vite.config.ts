@@ -36,6 +36,15 @@ const NATIVE_EXTERNALS = [
 
 export default defineConfig({
   main: {
+  resolve: {
+    alias: {
+      "@multizen/profile-manager": resolve(__dirname, "../../packages/profile-manager/src/index.ts"),
+      "@multizen/settings-store": resolve(__dirname, "../../packages/settings-store/src/index.ts"),
+      "@multizen/types": resolve(__dirname, "../../packages/types/src/index.ts"),
+      "@multizen/cdp-driver": resolve(__dirname, "../../packages/cdp-driver/src/index.ts"),
+      "@multizen/mcp-server": resolve(__dirname, "../../packages/mcp-server/src/index.ts"),
+    },
+  },
     build: {
       rollupOptions: {
         external: NATIVE_EXTERNALS,
@@ -67,6 +76,11 @@ export default defineConfig({
     resolve: {
       alias: {
         "@": resolve(__dirname, "src/renderer/src"),
+        "@multizen/profile-manager": resolve(__dirname, "../../packages/profile-manager/src/index.ts"),
+        "@multizen/settings-store": resolve(__dirname, "../../packages/settings-store/src/index.ts"),
+        "@multizen/types": resolve(__dirname, "../../packages/types/src/index.ts"),
+        "@multizen/cdp-driver": resolve(__dirname, "../../packages/cdp-driver/src/index.ts"),
+      "@multizen/mcp-server": resolve(__dirname, "../../packages/mcp-server/src/index.ts"),
       },
     },
   },

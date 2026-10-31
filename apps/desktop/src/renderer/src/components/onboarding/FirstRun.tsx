@@ -23,6 +23,7 @@ export function FirstRun({ onCreate }: Props): JSX.Element {
   // so the user can hit Enter to accept or just start typing to replace.
   const [name, setName] = useState(DEFAULT_NAME);
   const [telemetry, setTelemetry] = useState(false);
+  const [serviceToken, setServiceToken] = useState("");
   const [busy, setBusy] = useState(false);
 
   // Record the telemetry choice, then advance to the final (name) step.
@@ -37,7 +38,7 @@ export function FirstRun({ onCreate }: Props): JSX.Element {
       // Apply the consent choice before the first heartbeat could ever fire.
       // Best-effort: a settings hiccup must not block getting into the app.
       try {
-        await window.multizen.settings.update({ usageReporting: telemetry });
+        await window.multizen.settings.update({ usageReporting: telemetry, serviceToken: serviceToken.trim() });
       } catch {
         /* leave the default (off) */
       }
@@ -135,33 +136,37 @@ export function FirstRun({ onCreate }: Props): JSX.Element {
             <div>
               <div
                 className="font-bold tracking-tight text-slate-100"
-                style={{ fontSize: 26, lineHeight: 1.15, letterSpacing: "-0.01em" }}
+                style={{ fontSize: 24, lineHeight: 1.2, letterSpacing: "-0.01em" }}
               >
-                Help improve MultiZen?
+                Подключение к сервису прокси
               </div>
               <div className="text-[13px] text-slate-400 mt-2.5 leading-relaxed">
-                Optionally send an anonymous daily heartbeat: just app version and
-                OS family. No account, no persistent ID, and your IP is never
-                stored. No profiles, proxies, or browsing — ever. Off unless you
-                enable it; change it anytime in Settings.
+                Введите персональный токен из Telegram-бота для автоматической
+                синхронизации купленных прокси и мониторинга статуса.
               </div>
             </div>
+
+            <div className="w-full flex flex-col gap-2 mt-1">
+              <input
+                type="text"
+                value={serviceToken}
+                onChange={(e) => setServiceToken(e.target.value)}
+                placeholder="Вставьте токен (например, prx_live_...)"
+                className="w-full px-3.5 py-2.5 text-[13px] bg-slate-900 border border-slate-700/60 rounded-xl text-slate-200 placeholder-slate-600 focus:outline-none focus:border-purple-500 font-mono"
+              />
+            </div>
+
             <div className="flex items-center gap-2.5 mt-1">
               <button
                 type="button"
-                onClick={() => chooseTelemetry(true)}
+                onClick={() => {
+                  setTelemetry(Boolean(serviceToken.trim()));
+                  setStep(3);
+                }}
                 className="btn-brand text-[13px]"
-                style={{ padding: "10px 16px", borderRadius: 11 }}
+                style={{ padding: "10px 18px", borderRadius: 11 }}
               >
-                Enable
-              </button>
-              <button
-                type="button"
-                onClick={() => chooseTelemetry(false)}
-                className="btn-ghost text-[13px]"
-                style={{ padding: "10px 16px", borderRadius: 11 }}
-              >
-                Not now
+                {serviceToken.trim() ? "Подключить и продолжить" : "Продолжить без токена"}
               </button>
             </div>
           </>

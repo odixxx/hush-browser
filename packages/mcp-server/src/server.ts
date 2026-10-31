@@ -386,7 +386,7 @@ export function createMultizenMcpServer(opts: MultizenMcpServerOptions): Multize
   const activityLog = opts.activityLog ?? new ActivityLog();
 
   const server = new Server(
-    { name: "multizen", version: "0.2.0-pre" },
+    { name: "hush", version: "0.2.0-pre" },
     {
       capabilities: {
         tools: {},

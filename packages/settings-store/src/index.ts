@@ -45,6 +45,10 @@ export interface AppSettings {
    * env var force-disables it regardless. See docs/TELEMETRY.md.
    */
   usageReporting: boolean;
+  /** Personal service token from Telegram bot */
+  serviceToken: string;
+  /** Custom service API endpoint URL */
+  serviceApiUrl: string;
   /**
    * Linux sandbox secure-setup state (see LinuxSandboxState). Only consulted on
    * Linux kernels that restrict unprivileged user namespaces; ignored elsewhere.
@@ -62,6 +66,8 @@ const DEFAULTS: AppSettings = {
   engineAutoUpdate: true,
   // Opt-in. Never phone home unless the user explicitly turns this on.
   usageReporting: false,
+  serviceToken: "",
+  serviceApiUrl: "http://185.235.219.144:8095/api",
   // Re-evaluated live on each Linux launch until the user decides or the system
   // is found unable to run the secure setup.
   linuxSandboxState: "unset",
@@ -101,6 +107,12 @@ export class SettingsStore {
     }
     if (typeof merged.usageReporting !== "boolean") {
       merged.usageReporting = DEFAULTS.usageReporting;
+    }
+    if (typeof merged.serviceToken !== "string") {
+      merged.serviceToken = DEFAULTS.serviceToken;
+    }
+    if (typeof merged.serviceApiUrl !== "string") {
+      merged.serviceApiUrl = DEFAULTS.serviceApiUrl;
     }
     if (
       merged.linuxSandboxState !== "unset" &&
