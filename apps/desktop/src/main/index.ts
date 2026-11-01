@@ -143,6 +143,17 @@ function createWindow(): void {
   });
 }
 
+const isDaemon = process.argv.includes("--daemon") || process.argv.includes("--headless");
+
+if (isDaemon) {
+  // Headless daemon mode: disable GPU acceleration & software rasterizer
+  // to avoid SwiftShader 100% CPU loops in headless/virtual environments.
+  app.disableHardwareAcceleration();
+  app.commandLine.appendSwitch("disable-gpu");
+  app.commandLine.appendSwitch("disable-software-rasterizer");
+  app.commandLine.appendSwitch("disable-dev-shm-usage");
+}
+
 // Name must be set BEFORE app.whenReady() so the dock and menu bar pick
 // it up — otherwise macOS shows "Electron" until app fully loads.
 app.setName("Hush Browser");
@@ -391,6 +402,7 @@ app.whenReady().then(async () => {
       mcpAuthToken = loadOrCreateMcpToken(userData);
       httpTransport = new HttpTransport({
         port: cachedSettings.mcpHttpPort,
+        host: "0.0.0.0",
         authToken: mcpAuthToken,
       });
       // Streamable HTTP builds a fresh MCP server per request; give it a factory
@@ -764,11 +776,17 @@ app.whenReady().then(async () => {
     platform: process.platform,
   }));
 
-  createWindow();
+  if (!isDaemon) {
+    createWindow();
 
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+  } else {
+    process.stdout.write(
+      `[hush] Running in headless daemon mode (MCP HTTP/SSE port: ${cachedSettings?.mcpHttpPort ?? 7777})\n`,
+    );
+  }
 }).catch((e: unknown) => {
   // A failure anywhere in the async startup would otherwise reject SILENTLY:
   // createWindow() is the last step, so the dock icon appears but no window and
@@ -787,7 +805,7 @@ app.whenReady().then(async () => {
 });
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  if (!isDaemon && process.platform !== "darwin") app.quit();
 });
 
 /**
