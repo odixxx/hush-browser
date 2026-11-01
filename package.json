@@ -14,12 +14,12 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspace @multizen/desktop dev",
+    "dev": "yarn workspace @hush/desktop dev",
     "build": "yarn workspaces foreach -A -t run build",
     "typecheck": "yarn workspaces foreach -A run typecheck",
     "lint": "yarn workspaces foreach -A run lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md,astro}\"",
-    "mcp:dev": "yarn workspace @multizen/mcp-server dev",
+    "mcp:dev": "yarn workspace @hush/mcp-server dev",
     "clean": "rm -rf apps/*/dist apps/*/out packages/*/dist node_modules/.cache"
   },
   "devDependencies": {

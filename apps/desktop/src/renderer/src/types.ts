@@ -14,9 +14,9 @@ import type {
   ExtensionConfig,
   BrowserEngine,
   SandboxStatus,
-} from "@multizen/types";
+} from "@hush/types";
 
-/** Payload for the `extensions:installed` push (companion "Add to MultiZen"). */
+/** Payload for the `extensions:installed` push (companion "Add to Hush Browser"). */
 export type ExtensionInstalledEvent =
   | { ok: true; profileId: string; extension: ExtensionConfig }
   | { ok: false; profileId: string; error: string };
@@ -50,8 +50,8 @@ export interface ProxyGeoResult {
   /** Round-trip time (ms) of the test request through the proxy. */
   latencyMs?: number;
 }
-import type { ActivityEvent } from "@multizen/mcp-server";
-import type { AppSettings } from "@multizen/settings-store";
+import type { ActivityEvent } from "@hush/mcp-server";
+import type { AppSettings } from "@hush/settings-store";
 
 export interface SystemInfo {
   mcpHttpUrl: string | null;
@@ -65,7 +65,7 @@ export type RunningStateChange =
   | { kind: "closing"; profileId: ProfileId }
   | { kind: "closed"; profileId: ProfileId; reason: "user-close" | "external-exit" };
 
-export interface MultizenApi {
+export interface HushApi {
   profiles: {
     list: () => Promise<ProfileSummary[]>;
     get: (id: ProfileId) => Promise<Profile | null>;
@@ -161,9 +161,12 @@ export interface MultizenApi {
   };
 }
 
+export type HushApi = HushApi;
+
 declare global {
   interface Window {
-    multizen: MultizenApi;
+    hush: HushApi;
+    multizen?: HushApi;
   }
 }
 

@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 
 /**
  * Native modules and Electron itself cannot be bundled — they must be
- * marked external. Pure-JS workspace deps (@multizen/*) get bundled so
+ * marked external. Pure-JS workspace deps (@hush/*) get bundled so
  * we can ship .ts source files without a separate build step in dev.
  */
 const NATIVE_EXTERNALS = [
@@ -38,6 +38,11 @@ export default defineConfig({
   main: {
   resolve: {
     alias: {
+      "@hush/profile-manager": resolve(__dirname, "../../packages/profile-manager/src/index.ts"),
+      "@hush/settings-store": resolve(__dirname, "../../packages/settings-store/src/index.ts"),
+      "@hush/types": resolve(__dirname, "../../packages/types/src/index.ts"),
+      "@hush/cdp-driver": resolve(__dirname, "../../packages/cdp-driver/src/index.ts"),
+      "@hush/mcp-server": resolve(__dirname, "../../packages/mcp-server/src/index.ts"),
       "@multizen/profile-manager": resolve(__dirname, "../../packages/profile-manager/src/index.ts"),
       "@multizen/settings-store": resolve(__dirname, "../../packages/settings-store/src/index.ts"),
       "@multizen/types": resolve(__dirname, "../../packages/types/src/index.ts"),
@@ -76,11 +81,11 @@ export default defineConfig({
     resolve: {
       alias: {
         "@": resolve(__dirname, "src/renderer/src"),
-        "@multizen/profile-manager": resolve(__dirname, "../../packages/profile-manager/src/index.ts"),
-        "@multizen/settings-store": resolve(__dirname, "../../packages/settings-store/src/index.ts"),
-        "@multizen/types": resolve(__dirname, "../../packages/types/src/index.ts"),
-        "@multizen/cdp-driver": resolve(__dirname, "../../packages/cdp-driver/src/index.ts"),
-      "@multizen/mcp-server": resolve(__dirname, "../../packages/mcp-server/src/index.ts"),
+        "@hush/profile-manager": resolve(__dirname, "../../packages/profile-manager/src/index.ts"),
+        "@hush/settings-store": resolve(__dirname, "../../packages/settings-store/src/index.ts"),
+        "@hush/types": resolve(__dirname, "../../packages/types/src/index.ts"),
+        "@hush/cdp-driver": resolve(__dirname, "../../packages/cdp-driver/src/index.ts"),
+      "@hush/mcp-server": resolve(__dirname, "../../packages/mcp-server/src/index.ts"),
       },
     },
   },

@@ -8,8 +8,8 @@
  *   - isBrowserEngine / import not-in-roster fallback (AC8)
  *   - SettingsStore coercion of a stored legacy "cft" (AC11)
  *
- * Run (tsx + @multizen/settings-store are test-only devDeps of this package):
- *   yarn workspace @multizen/profile-manager exec tsx scripts/test-engine-resolution.ts
+ * Run (tsx + @hush/settings-store are test-only devDeps of this package):
+ *   yarn workspace @hush/profile-manager exec tsx scripts/test-engine-resolution.ts
  * or from the package dir:  npx tsx scripts/test-engine-resolution.ts
  */
 import assert from "node:assert/strict";
@@ -21,8 +21,8 @@ import {
   isBrowserEngine,
   BROWSER_ENGINES,
   type BrowserEngine,
-} from "@multizen/types";
-import { SettingsStore } from "@multizen/settings-store";
+} from "@hush/types";
+import { SettingsStore } from "@hush/settings-store";
 
 let checks = 0;
 let fails = 0;

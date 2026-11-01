@@ -1,5 +1,5 @@
 import type { BrowserDriver } from "./server.js";
-import type { LaunchedProfile, ProfileId } from "@multizen/types";
+import type { LaunchedProfile, ProfileId } from "@hush/types";
 
 /**
  * In-memory browser driver for development. Returns plausible mock data

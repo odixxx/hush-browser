@@ -3,8 +3,8 @@ import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { delimiter, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { LinuxSandboxState } from "@multizen/settings-store";
-import type { SandboxStatus, SandboxUiState } from "@multizen/types";
+import type { LinuxSandboxState } from "@hush/settings-store";
+import type { SandboxStatus, SandboxUiState } from "@hush/types";
 
 export type { SandboxStatus, SandboxUiState };
 
@@ -28,7 +28,7 @@ export type { SandboxStatus, SandboxUiState };
  * helpers stay unit-testable.
  */
 
-export const PROFILE_NAME = "multizen-cloakbrowser";
+export const PROFILE_NAME = "hush-cloakbrowser";
 export const PROFILE_FILE = `/etc/apparmor.d/${PROFILE_NAME}`;
 
 /** Why the secure setup could not be completed (surfaced to the user). */
@@ -47,7 +47,7 @@ export interface SandboxDecision {
 }
 
 // SandboxStatus / SandboxUiState are the cross-process DTO, defined in
-// @multizen/types and re-exported above. State meanings: "n/a" = not Linux or
+// @hush/types and re-exported above. State meanings: "n/a" = not Linux or
 // not the AppArmor mechanism; "not-restricted" = Linux, userns not restricted;
 // "active" = profile verified loaded for the current binary; "needs-setup" =
 // restricted + not yet set up + not declined; "declined"/"unsupported" as named.
@@ -308,7 +308,7 @@ export async function runInstall(attachPath: string): Promise<SetupResult> {
       });
       p.on("close", (code) => {
         if (code === 0) return finish({ ok: true });
-        if (stderr.trim()) console.warn(`[multizen] apparmor install: ${stderr.trim()}`);
+        if (stderr.trim()) console.warn(`[hush] apparmor install: ${stderr.trim()}`);
         finish({ ok: false, reason: mapSetupExit(code) });
       });
       p.stdin.on("error", () => finish({ ok: false, reason: "failed" }));

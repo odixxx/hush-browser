@@ -57,7 +57,7 @@ function LiveExtensions({ profileId }: { profileId: string }): JSX.Element {
 
   useEffect(() => {
     let cancelled = false;
-    window.multizen.extensions
+    window.hush.extensions
       .list(profileId)
       .then((res) => {
         if (!cancelled) {
@@ -92,7 +92,7 @@ function LiveExtensions({ profileId }: { profileId: string }): JSX.Element {
     setShowAttach((v) => !v);
     if (available === null) {
       try {
-        setAvailable(await window.multizen.extensions.storeEntries());
+        setAvailable(await window.hush.extensions.storeEntries());
       } catch {
         setAvailable([]);
       }
@@ -103,7 +103,7 @@ function LiveExtensions({ profileId }: { profileId: string }): JSX.Element {
     setCatalogBusyId(ext.id);
     setError(null);
     try {
-      setItems(await window.multizen.extensions.addFromWebStore(profileId, ext.id));
+      setItems(await window.hush.extensions.addFromWebStore(profileId, ext.id));
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -139,10 +139,10 @@ function LiveExtensions({ profileId }: { profileId: string }): JSX.Element {
               ext={ext}
               profileId={profileId}
               onToggle={(enabled) =>
-                void run(() => window.multizen.extensions.toggle(profileId, ext.id, enabled))
+                void run(() => window.hush.extensions.toggle(profileId, ext.id, enabled))
               }
               onRemove={() =>
-                void run(() => window.multizen.extensions.remove(profileId, ext.id))
+                void run(() => window.hush.extensions.remove(profileId, ext.id))
               }
             />
           ))}
@@ -171,13 +171,13 @@ function LiveExtensions({ profileId }: { profileId: string }): JSX.Element {
           busy={busy}
           onAddWebStore={() =>
             void run(async () => {
-              const next = await window.multizen.extensions.addFromWebStore(profileId, url.trim());
+              const next = await window.hush.extensions.addFromWebStore(profileId, url.trim());
               setUrl("");
               return next;
             })
           }
-          onAddFile={() => void run(() => window.multizen.extensions.addFromFile(profileId))}
-          onAddFolder={() => void run(() => window.multizen.extensions.addFromFolder(profileId))}
+          onAddFile={() => void run(() => window.hush.extensions.addFromFile(profileId))}
+          onAddFolder={() => void run(() => window.hush.extensions.addFromFolder(profileId))}
         />
 
         <CatalogToggle open={showCatalog} onToggle={() => setShowCatalog((v) => !v)} />
@@ -222,7 +222,7 @@ function LiveExtensions({ profileId }: { profileId: string }): JSX.Element {
                     <button
                       type="button"
                       onClick={() =>
-                        void run(() => window.multizen.extensions.attach(profileId, ext.id, ext.version))
+                        void run(() => window.hush.extensions.attach(profileId, ext.id, ext.version))
                       }
                       className="btn-secondary px-2 py-0.5 text-[11px] rounded-[6px] shrink-0"
                     >
@@ -287,7 +287,7 @@ function StagingExtensions({
     setShowAttach((v) => !v);
     if (available === null) {
       try {
-        setAvailable(await window.multizen.extensions.storeEntries());
+        setAvailable(await window.hush.extensions.storeEntries());
       } catch {
         setAvailable([]);
       }
@@ -298,7 +298,7 @@ function StagingExtensions({
     setCatalogBusyId(ext.id);
     setError(null);
     try {
-      upsert(await window.multizen.extensions.prepareFromWebStore(ext.id));
+      upsert(await window.hush.extensions.prepareFromWebStore(ext.id));
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -354,13 +354,13 @@ function StagingExtensions({
           busy={busy}
           onAddWebStore={() =>
             void run(async () => {
-              const cfg = await window.multizen.extensions.prepareFromWebStore(url.trim());
+              const cfg = await window.hush.extensions.prepareFromWebStore(url.trim());
               setUrl("");
               return cfg;
             })
           }
-          onAddFile={() => void run(() => window.multizen.extensions.prepareFromFile())}
-          onAddFolder={() => void run(() => window.multizen.extensions.prepareFromFolder())}
+          onAddFile={() => void run(() => window.hush.extensions.prepareFromFile())}
+          onAddFolder={() => void run(() => window.hush.extensions.prepareFromFolder())}
         />
 
         <CatalogToggle open={showCatalog} onToggle={() => setShowCatalog((v) => !v)} />
@@ -593,13 +593,13 @@ function LiveEssentialsBlock({
       const existing = items.find((e) => e.id === ext.id);
       if (shouldEnable) {
         if (existing) {
-          onUpdate(await window.multizen.extensions.toggle(profileId, ext.id, true));
+          onUpdate(await window.hush.extensions.toggle(profileId, ext.id, true));
         } else {
-          onUpdate(await window.multizen.extensions.addFromWebStore(profileId, ext.id));
+          onUpdate(await window.hush.extensions.addFromWebStore(profileId, ext.id));
         }
       } else {
         if (existing) {
-          onUpdate(await window.multizen.extensions.remove(profileId, ext.id));
+          onUpdate(await window.hush.extensions.remove(profileId, ext.id));
         }
       }
     } catch (e) {
@@ -616,9 +616,9 @@ function LiveEssentialsBlock({
       let current = [...items];
       for (const ext of HUSH_ESSENTIAL_EXTENSIONS) {
         if (!current.some((e) => e.id === ext.id)) {
-          current = await window.multizen.extensions.addFromWebStore(profileId, ext.id);
+          current = await window.hush.extensions.addFromWebStore(profileId, ext.id);
         } else if (!current.some((e) => e.id === ext.id && e.enabled)) {
-          current = await window.multizen.extensions.toggle(profileId, ext.id, true);
+          current = await window.hush.extensions.toggle(profileId, ext.id, true);
         }
       }
       onUpdate(current);

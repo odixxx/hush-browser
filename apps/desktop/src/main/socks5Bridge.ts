@@ -1,7 +1,7 @@
 import { createServer, type Socket, type AddressInfo } from "node:net";
 import { connect as netConnect } from "node:net";
 import { SocksClient } from "socks";
-import type { ProfileId, ProxyConfig } from "@multizen/types";
+import type { ProfileId, ProxyConfig } from "@hush/types";
 
 /**
  * Local SOCKS5 → upstream-proxy bridge, per profile.
@@ -46,7 +46,7 @@ function warnBridgeThrottled(msg: string): void {
   const now = Date.now();
   if (now - (bridgeWarnAt.get(msg) ?? 0) < 30_000) return;
   bridgeWarnAt.set(msg, now);
-  console.warn("[multizen] socks5 bridge:", msg);
+  console.warn("[hush] socks5 bridge:", msg);
 }
 
 export async function startBridgeForProfile(
@@ -101,7 +101,7 @@ async function startBridge(upstream: ProxyConfig): Promise<BridgeHandle> {
   });
 
   server.on("error", (e) => {
-    console.error("[multizen] socks5 bridge server error:", e);
+    console.error("[hush] socks5 bridge server error:", e);
   });
 
   await new Promise<void>((resolve, reject) => {

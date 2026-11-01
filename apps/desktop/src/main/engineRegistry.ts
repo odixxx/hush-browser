@@ -1,5 +1,5 @@
 import { EventEmitter } from "node:events";
-import type { BrowserEngine, ChromiumStatus } from "@multizen/types";
+import type { BrowserEngine, ChromiumStatus } from "@hush/types";
 import { ChromiumBootstrap } from "./ChromiumBootstrap.ts";
 import { CamoufoxBootstrap } from "./CamoufoxBootstrap.ts";
 

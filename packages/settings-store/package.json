@@ -1,5 +1,5 @@
 {
-  "name": "@multizen/settings-store",
+  "name": "@hush/settings-store",
   "version": "0.2.9",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@multizen/types": "workspace:*"
+    "@hush/types": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

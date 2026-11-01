@@ -20,8 +20,8 @@
 set -euo pipefail
 export PATH="/usr/sbin:/usr/bin:/sbin:/bin"
 
-PROFILE_PATH="/etc/apparmor.d/multizen-cloakbrowser"
-PROFILE_NAME="multizen-cloakbrowser"
+PROFILE_PATH="/etc/apparmor.d/hush-cloakbrowser"
+PROFILE_NAME="hush-cloakbrowser"
 
 mode="${1:-install}"
 

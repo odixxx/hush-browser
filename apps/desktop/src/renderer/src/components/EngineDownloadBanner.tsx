@@ -20,8 +20,8 @@ export function EngineDownloadBanner(): JSX.Element | null {
   );
 
   useEffect(() => {
-    if (!window.multizen) return;
-    return window.multizen.engine.onDownloadStatus(setState);
+    if (!window.hush) return;
+    return window.hush.engine.onDownloadStatus(setState);
   }, []);
 
   // Only surface on-demand engines; CloakBrowser has its own bootstrap UI.

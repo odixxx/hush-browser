@@ -38,7 +38,7 @@ export function FirstRun({ onCreate }: Props): JSX.Element {
       // Apply the consent choice before the first heartbeat could ever fire.
       // Best-effort: a settings hiccup must not block getting into the app.
       try {
-        await window.multizen.settings.update({ usageReporting: telemetry, serviceToken: serviceToken.trim() });
+        await window.hush.settings.update({ usageReporting: telemetry, serviceToken: serviceToken.trim() });
       } catch {
         /* leave the default (off) */
       }

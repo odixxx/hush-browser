@@ -43,21 +43,21 @@ export function Settings({ onImport }: Props): JSX.Element {
   const [sandboxCmdCopied, setSandboxCmdCopied] = useState(false);
 
   useEffect(() => {
-    if (!window.multizen) return;
-    void window.multizen.settings.get().then(setSettings);
-    void window.multizen.system.info().then(setInfo);
-    void window.multizen.update.status().then(setUpdateStatus);
-    void window.multizen.update.lastChecked().then(setLastChecked);
-    void window.multizen.chromium.status().then(setChromiumStatus);
-    void window.multizen.engineUpdate.status().then(setEngineUpdateStatus);
-    void window.multizen.sandbox.status().then(setSandbox);
-    const offChromium = window.multizen.chromium.onStatus(setChromiumStatus);
-    const offEngineUpdate = window.multizen.engineUpdate.onStatus(setEngineUpdateStatus);
+    if (!window.hush) return;
+    void window.hush.settings.get().then(setSettings);
+    void window.hush.system.info().then(setInfo);
+    void window.hush.update.status().then(setUpdateStatus);
+    void window.hush.update.lastChecked().then(setLastChecked);
+    void window.hush.chromium.status().then(setChromiumStatus);
+    void window.hush.engineUpdate.status().then(setEngineUpdateStatus);
+    void window.hush.sandbox.status().then(setSandbox);
+    const offChromium = window.hush.chromium.onStatus(setChromiumStatus);
+    const offEngineUpdate = window.hush.engineUpdate.onStatus(setEngineUpdateStatus);
     // Refresh "last checked" on every status change too, so a background
     // auto-check updates the label live while Settings is open.
-    const offUpdate = window.multizen.update.onStatus((s) => {
+    const offUpdate = window.hush.update.onStatus((s) => {
       setUpdateStatus(s);
-      void window.multizen.update.lastChecked().then(setLastChecked);
+      void window.hush.update.lastChecked().then(setLastChecked);
     });
     return () => {
       offChromium();
@@ -68,7 +68,7 @@ export function Settings({ onImport }: Props): JSX.Element {
 
   async function patch(p: Partial<AppSettings>): Promise<void> {
     if (!settings) return;
-    const next = await window.multizen.settings.update(p);
+    const next = await window.hush.settings.update(p);
     setSettings(next);
   }
 
@@ -97,19 +97,19 @@ export function Settings({ onImport }: Props): JSX.Element {
   }
 
   async function checkForUpdates(): Promise<void> {
-    await window.multizen.update.check();
-    setLastChecked(await window.multizen.update.lastChecked());
+    await window.hush.update.check();
+    setLastChecked(await window.hush.update.lastChecked());
   }
 
   async function checkEngineForUpdates(): Promise<void> {
     // install() = check + stage the newer version (applies on next launch).
-    setEngineUpdateStatus(await window.multizen.engineUpdate.install());
+    setEngineUpdateStatus(await window.hush.engineUpdate.install());
   }
 
   async function runSandboxSetup(): Promise<void> {
     setSandboxBusy(true);
     try {
-      setSandbox(await window.multizen.sandbox.setup());
+      setSandbox(await window.hush.sandbox.setup());
     } finally {
       setSandboxBusy(false);
     }

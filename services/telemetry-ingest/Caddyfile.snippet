@@ -4,9 +4,9 @@
 # Reverse-proxies to the local ingest service and, crucially, DISABLES access
 # logging for this vhost so client IPs are never written to disk (the ingest
 # itself already ignores the IP). Caddy fetches a Let's Encrypt cert
-# automatically once ping.getmultizen.com resolves to this host.
+# automatically once ping.hushbrowser.io resolves to this host.
 
-ping.getmultizen.com {
+ping.hushbrowser.io {
 	log {
 		output discard
 	}

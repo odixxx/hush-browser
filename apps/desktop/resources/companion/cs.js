@@ -1,6 +1,6 @@
-// MultiZen Companion — content script on Chrome Web Store detail pages. The
+// Hush Companion — content script on Chrome Web Store detail pages. The
 // native install path is dead in CloakBrowser, so we replace the disabled "Add
-// to Chrome" button with our own "Add to MultiZen" in the same spot and hide
+// to Chrome" button with our own "Add to Hush Browser" in the same spot and hide
 // Google's "Switch/Install Chrome" promos.
 //
 // CloakBrowser runs content scripts in an ISOLATED world (it ignores manifest
@@ -40,9 +40,9 @@
 
   function makeButton() {
     const btn = document.createElement("button");
-    btn.id = "mz-add-to-multizen";
+    btn.id = "hush-add-to-browser";
     btn.type = "button";
-    btn.textContent = "Add to MultiZen";
+    btn.textContent = "Add to Hush Browser";
     btn.style.cssText = [
       "display:inline-flex",
       "align-items:center",
@@ -92,7 +92,7 @@
   function isVisibleContainer(container) {
     if (!container) return false;
     if (container.style && container.style.display === "none") return false;
-    if (container.querySelector && container.querySelector("#mz-add-to-multizen")) return false;
+    if (container.querySelector && container.querySelector("#hush-add-to-browser")) return false;
     const r = container.getBoundingClientRect();
     return r.width >= 1 && r.height >= 1; // collapsed → 0×0 for non-Chrome
   }
@@ -139,7 +139,7 @@
       if (!/Switch to Chrome to install extensions/i.test(t)) continue;
       const r = divs[i].getBoundingClientRect();
       if (r.width < 1 || r.height < 1) continue; // not the visible one
-      if (divs[i].querySelector("#mz-add-to-multizen")) continue;
+      if (divs[i].querySelector("#hush-add-to-browser")) continue;
       return divs[i];
     }
     return null;
@@ -150,11 +150,11 @@
     if (!extractId()) return;
     // SPA navigated to a different extension → drop our old button and re-place.
     if (placedPath && placedPath !== location.pathname) {
-      const old = document.getElementById("mz-add-to-multizen");
+      const old = document.getElementById("hush-add-to-browser");
       if (old) old.remove();
       placedPath = "";
     }
-    if (document.getElementById("mz-add-to-multizen")) return; // already placed here
+    if (document.getElementById("hush-add-to-browser")) return; // already placed here
 
     // Primary: a visible native "Add to Chrome" → sit in its place.
     const native = findVisibleNativeAdd();
@@ -198,7 +198,7 @@
   // that ancestor was wiping our button + page content.
   function containsActionUi(node) {
     if (!node || node.nodeType !== 1) return false;
-    if (node.querySelector && node.querySelector("#mz-add-to-multizen")) return true;
+    if (node.querySelector && node.querySelector("#hush-add-to-browser")) return true;
     const spans = node.querySelectorAll ? node.querySelectorAll("span") : [];
     for (let i = 0; i < spans.length; i++) {
       if ((spans[i].textContent || "").trim() === "Add to Chrome") return true;

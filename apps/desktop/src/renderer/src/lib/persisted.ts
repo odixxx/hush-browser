@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-const NAMESPACE = "multizen.ui";
+const NAMESPACE = "hush.ui";
 
 function read<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -24,7 +24,7 @@ function write<T>(key: string, value: T): void {
 
 /**
  * Like useState, but value persists across app restarts under
- * localStorage[`multizen.ui.${key}`].
+ * localStorage[`hush.ui.${key}`].
  *
  * Reads on mount (sync), writes on every change.
  */

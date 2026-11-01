@@ -2,7 +2,7 @@ import { app } from "electron";
 import { randomBytes } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
-import type { AppSettings } from "@multizen/settings-store";
+import type { AppSettings } from "@hush/settings-store";
 
 /**
  * Opt-in anonymous usage heartbeat. See docs/TELEMETRY.md for the full design

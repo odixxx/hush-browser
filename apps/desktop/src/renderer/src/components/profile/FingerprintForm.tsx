@@ -37,9 +37,9 @@ export function FingerprintForm({ fingerprint, onChange, proxy }: Props): JSX.El
   const [detected, setDetected] = useState<ProxyGeoResult | null>(null);
 
   useEffect(() => {
-    if (!window.multizen) return;
-    void window.multizen.fingerprint.devices().then(setDevices);
-    void window.multizen.fingerprint.locales().then(setLocales);
+    if (!window.hush) return;
+    void window.hush.fingerprint.devices().then(setDevices);
+    void window.hush.fingerprint.locales().then(setLocales);
   }, []);
 
   // Reset detection state when proxy changes
@@ -52,14 +52,14 @@ export function FingerprintForm({ fingerprint, onChange, proxy }: Props): JSX.El
   const currentLocale = locales.find((l) => l.locale === fingerprint.locale);
 
   async function regen(): Promise<void> {
-    const next = await window.multizen.fingerprint.generate();
+    const next = await window.hush.fingerprint.generate();
     onChange(next);
   }
 
   async function reconcile(
-    patch: Parameters<typeof window.multizen.fingerprint.reconcile>[1],
+    patch: Parameters<typeof window.hush.fingerprint.reconcile>[1],
   ): Promise<void> {
-    const next = await window.multizen.fingerprint.reconcile(fingerprint, patch);
+    const next = await window.hush.fingerprint.reconcile(fingerprint, patch);
     onChange(next);
   }
 
@@ -68,7 +68,7 @@ export function FingerprintForm({ fingerprint, onChange, proxy }: Props): JSX.El
     setDetecting(true);
     setDetectError(null);
     try {
-      const result = await window.multizen.proxy.detectGeo(proxy);
+      const result = await window.hush.proxy.detectGeo(proxy);
       if (!result.ok) {
         setDetectError(result.error);
         return;
@@ -77,7 +77,7 @@ export function FingerprintForm({ fingerprint, onChange, proxy }: Props): JSX.El
       // Resolve locale for the proxy's country. Falls back to a culturally
       // adjacent locale for countries that don't have an explicit preset
       // (e.g. Liechtenstein → de-DE, San Marino → it-IT).
-      const localeId = await window.multizen.fingerprint.localeForCountry(
+      const localeId = await window.hush.fingerprint.localeForCountry(
         result.geo.country,
       );
       if (!localeId) {

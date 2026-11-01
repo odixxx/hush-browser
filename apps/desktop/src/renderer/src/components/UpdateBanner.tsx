@@ -20,9 +20,9 @@ export function UpdateBanner({ suppressed }: { suppressed?: boolean }): JSX.Elem
   const [dismissedKey, setDismissedKey] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!window.multizen) return;
-    void window.multizen.update.status().then(setStatus);
-    return window.multizen.update.onStatus(setStatus);
+    if (!window.hush) return;
+    void window.hush.update.status().then(setStatus);
+    return window.hush.update.onStatus(setStatus);
   }, []);
 
   if (suppressed || !status) return null;
@@ -50,7 +50,7 @@ export function UpdateBanner({ suppressed }: { suppressed?: boolean }): JSX.Elem
           Hush Browser <b className="font-semibold">{version}</b> is ready to install.
         </span>
         <div className="flex-1" />
-        <BannerButton primary onClick={() => void window.multizen.update.install()}>
+        <BannerButton primary onClick={() => void window.hush.update.install()}>
           Restart now
         </BannerButton>
         <BannerButton onClick={() => setDismissedKey(key)}>Later</BannerButton>
@@ -67,7 +67,7 @@ export function UpdateBanner({ suppressed }: { suppressed?: boolean }): JSX.Elem
           Hush Browser <b className="font-semibold">{version}</b> is available.
         </span>
         <div className="flex-1" />
-        <BannerButton primary onClick={() => void window.multizen.update.download(version)}>
+        <BannerButton primary onClick={() => void window.hush.update.download(version)}>
           Download
         </BannerButton>
         <BannerButton aria-label="Dismiss" onClick={() => setDismissedKey(key)}>

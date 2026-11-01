@@ -1,7 +1,7 @@
 import { request } from "node:https";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { SocksProxyAgent } from "socks-proxy-agent";
-import type { ProxyConfig } from "@multizen/types";
+import type { ProxyConfig } from "@hush/types";
 
 /**
  * Result of probing a proxy for its public IP geolocation.

@@ -43,8 +43,8 @@ async function extractArchive(archivePath: string, destDir: string): Promise<voi
 async function extractZipPreservingAttrs(zipPath: string, destDir: string): Promise<void> {
   return extractArchive(zipPath, destDir);
 }
-import type { BrowserEngine } from "@multizen/types";
-import type { ChromiumStatus } from "@multizen/types";
+import type { BrowserEngine } from "@hush/types";
+import type { ChromiumStatus } from "@hush/types";
 
 const execFileP = promisify(execFile);
 
@@ -787,7 +787,7 @@ export class ChromiumBootstrap extends EventEmitter {
       return;
     } catch (e) {
       console.warn(
-        `[multizen] codesign basic verify failed for ${appBundle}: ${(e as Error).message} — proceeding (HTTPS + SHA-256 already trusted).`,
+        `[hush] codesign basic verify failed for ${appBundle}: ${(e as Error).message} — proceeding (HTTPS + SHA-256 already trusted).`,
       );
     }
   }

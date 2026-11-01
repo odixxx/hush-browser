@@ -11,7 +11,7 @@ import {
   localeCatalog,
   hostPlatformFamily,
 } from "../src/fingerprint.js";
-import type { FingerprintConfig } from "@multizen/types";
+import type { FingerprintConfig } from "@hush/types";
 
 function coarseHash(fp: FingerprintConfig): string {
   return [

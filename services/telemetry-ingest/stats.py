@@ -2,7 +2,7 @@
 """
 Read-only stats for the MultiZen telemetry ingest. Run on the server:
 
-    /opt/multizen-telemetry/venv/bin/python stats.py
+    /opt/hush-telemetry/venv/bin/python stats.py
 
 Prints daily/weekly/monthly active machines (HyperLogLog estimates) and the
 version/OS breakdown. Suppresses breakdown cells below a k threshold so a rare

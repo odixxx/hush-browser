@@ -13,10 +13,10 @@ import assert from "node:assert/strict";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 
-import { createMultizenMcpServer, type BrowserDriver } from "../src/server.ts";
+import { createHushMcpServer, type BrowserDriver } from "../src/server.ts";
 import { MockBrowserDriver } from "../src/MockBrowserDriver.ts";
-import type { ProfileManager } from "@multizen/profile-manager";
-import type { LaunchedProfile, ProfileId } from "@multizen/types";
+import type { ProfileManager } from "@hush/profile-manager";
+import type { LaunchedProfile, ProfileId } from "@hush/types";
 
 // Raw cdp_send is opt-in (MULTIZEN_MCP_ALLOW_RAW_CDP). Enable it for the bulk of
 // the suite (which exercises cdp_send's gates); the default-OFF behaviour has its
@@ -119,7 +119,7 @@ class SpyDriver implements BrowserDriver {
 
 async function connect(driver: BrowserDriver): Promise<Client> {
   const profileManager = {} as unknown as ProfileManager;
-  const { server } = createMultizenMcpServer({ profileManager, browserDriver: driver });
+  const { server } = createHushMcpServer({ profileManager, browserDriver: driver });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   const client = new Client({ name: "test", version: "0.0.0" });
   await server.connect(serverTransport);

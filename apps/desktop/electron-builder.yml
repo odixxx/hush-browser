@@ -12,12 +12,12 @@ files:
   - "out/**/*"
   - "package.json"
   - "!**/*.map"
-  - "!node_modules/@multizen/**"
+  - "!node_modules/@hush/**"
 
 # Override package.json metadata in the packaged app. We strip the
-# @multizen/* workspace deps because electron-vite has already inlined
+# @hush/* workspace deps because electron-vite has already inlined
 # them into out/main/index.js — there's no runtime need for the
-# symlinked dirs in node_modules/@multizen/. Without this override,
+# symlinked dirs in node_modules/@hush/. Without this override,
 # electron-builder follows the symlinks to packages/<x>/package.json,
 # which is outside apps/desktop, and refuses to package
 # ("package.json must be under apps/desktop").
@@ -57,7 +57,7 @@ asarUnpack:
   - "node_modules/playwright-core/**/*"
   - "node_modules/camoufox-js/**/*"
 
-# Bundled first-party "companion" extension (injects the "Add to MultiZen"
+# Bundled first-party "companion" extension (injects the "Add to Hush Browser"
 # button on Web Store pages). Copied verbatim into <resources>/companion so the
 # driver can pass it to --load-extension for every profile.
 extraResources:

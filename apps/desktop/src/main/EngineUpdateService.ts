@@ -1,6 +1,6 @@
 import { EventEmitter } from "node:events";
-import type { AppSettings } from "@multizen/settings-store";
-import type { EngineUpdateStatus } from "@multizen/types";
+import type { AppSettings } from "@hush/settings-store";
+import type { EngineUpdateStatus } from "@hush/types";
 import type { ChromiumBootstrap } from "./ChromiumBootstrap.ts";
 
 const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6h

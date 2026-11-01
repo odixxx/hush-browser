@@ -2,7 +2,7 @@
  * Standalone runner for the MCP server.
  *
  * Used both for `yarn mcp:dev` (development) and as the entry point in
- * `bin/multizen-mcp.js` so an MCP client like Cursor or Claude Desktop
+ * `bin/hush-mcp.js` so an MCP client like Cursor or Claude Desktop
  * can spawn it via stdio without launching the desktop app.
  *
  * In standalone mode the browser driver is the MockBrowserDriver — useful
@@ -10,16 +10,17 @@
  * the same MCP server with the real Chromium-backed driver.
  */
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { ProfileManager } from "@multizen/profile-manager";
+import { ProfileManager } from "@hush/profile-manager";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 
-import { createMultizenMcpServer } from "./server.js";
+import { createHushMcpServer } from "./server.js";
 import { MockBrowserDriver } from "./MockBrowserDriver.js";
 
 async function main(): Promise<void> {
-  const dataRoot = join(homedir(), ".multizen");
+  const defaultRoot = existsSync(join(homedir(), ".hush")) ? join(homedir(), ".hush") : (existsSync(join(homedir(), ".multizen")) ? join(homedir(), ".multizen") : join(homedir(), ".hush"));
+  const dataRoot = process.env.HUSH_DATA_DIR ?? defaultRoot;
   mkdirSync(dataRoot, { recursive: true });
 
   const profileManager = new ProfileManager({
@@ -28,7 +29,7 @@ async function main(): Promise<void> {
   });
 
   const browserDriver = new MockBrowserDriver();
-  const { server, activityLog } = createMultizenMcpServer({ profileManager, browserDriver });
+  const { server, activityLog } = createHushMcpServer({ profileManager, browserDriver });
 
   // Pipe activity events to stderr in standalone mode (stdout is reserved for MCP transport)
   activityLog.on("event", (e) => {

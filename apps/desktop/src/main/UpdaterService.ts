@@ -2,8 +2,8 @@ import { app } from "electron";
 import { EventEmitter } from "node:events";
 import electronUpdater from "electron-updater";
 import type { UpdateInfo, ProgressInfo } from "electron-updater";
-import type { AppSettings } from "@multizen/settings-store";
-import type { UpdateStatus } from "@multizen/types";
+import type { AppSettings } from "@hush/settings-store";
+import type { UpdateStatus } from "@hush/types";
 
 // electron-updater is CommonJS; in our ESM main we pull `autoUpdater` off the
 // default export rather than a named import (which the CJS↔ESM interop doesn't

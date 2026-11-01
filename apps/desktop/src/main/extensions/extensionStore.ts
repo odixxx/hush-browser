@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { readdir, readFile, rm, stat } from "node:fs/promises";
 import { join, resolve, sep } from "node:path";
-import type { ExtensionConfig } from "@multizen/types";
+import type { ExtensionConfig } from "@hush/types";
 
 /** Don't reclaim a staging dir younger than this — it may be a live install. */
 const STALE_STAGING_MS = 5 * 60 * 1000;

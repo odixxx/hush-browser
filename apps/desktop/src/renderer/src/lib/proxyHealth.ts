@@ -1,5 +1,5 @@
 /**
- * Live proxy health for profile cards. Wraps `window.multizen.proxy.detectGeo`
+ * Live proxy health for profile cards. Wraps `window.hush.proxy.detectGeo`
  * (probes ipapi.co through the profile's proxy) behind a small module-level
  * cache so the same probe result is shared across every card that shows the
  * profile, survives remounts within a TTL, and — critically — a cold app open
@@ -88,7 +88,7 @@ function probe(profileId: string, proxy: ProxyConfig, lastCc?: string): Promise<
     runQueued(async () => {
       let health: ProxyHealth;
       try {
-        const res = await window.multizen.proxy.detectGeo(proxy, profileId);
+        const res = await window.hush.proxy.detectGeo(proxy, profileId);
         health = res.ok
           ? { status: "ok", cc: res.geo.country, country: res.geo.countryName, ip: res.geo.ip }
           : { status: "error", error: res.error, cc: lastCc };

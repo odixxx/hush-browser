@@ -78,7 +78,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         if self.path == "/healthz":
-            self._json(200, {"ok": True, "name": "multizen-telemetry"})
+            self._json(200, {"ok": True, "name": "hush-telemetry"})
         else:
             self._json(404, {"error": "not found"})
 
@@ -130,7 +130,7 @@ class Handler(BaseHTTPRequestHandler):
 
 def main() -> int:
     server = ThreadingHTTPServer((HOST, PORT), Handler)
-    sys.stdout.write(f"multizen-telemetry listening on {HOST}:{PORT}\n")
+    sys.stdout.write(f"hush-telemetry listening on {HOST}:{PORT}\n")
     sys.stdout.flush()
     try:
         server.serve_forever()

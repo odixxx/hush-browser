@@ -123,8 +123,8 @@ export function ProfileEditSheet({ profile, isRunning = false, onSaved }: Props)
   // persisted to it unless the user actually picks an engine.
   const [defaultEngine, setDefaultEngine] = useState<BrowserEngine>("cloakbrowser");
   useEffect(() => {
-    if (!window.multizen) return;
-    void window.multizen.settings.get().then((s) => setDefaultEngine(s.browserEngine));
+    if (!window.hush) return;
+    void window.hush.settings.get().then((s) => setDefaultEngine(s.browserEngine));
   }, []);
   const [loadingClusterProxy, setLoadingClusterProxy] = useState(false);
 
@@ -134,7 +134,7 @@ export function ProfileEditSheet({ profile, isRunning = false, onSaved }: Props)
       let endpoint = "http://185.235.219.144:8095/api/proxy";
       let token = "";
       try {
-        const settings = await window.multizen.settings.get();
+        const settings = await window.hush.settings.get();
         if (settings.serviceToken) token = settings.serviceToken;
         if (settings.serviceApiUrl) {
           endpoint = settings.serviceApiUrl.replace(/\/+$/, "") + "/proxy";
@@ -192,7 +192,7 @@ export function ProfileEditSheet({ profile, isRunning = false, onSaved }: Props)
   async function persist(f: FormState): Promise<void> {
     setStatus({ kind: "saving" });
     try {
-      await window.multizen.profiles.update(profile.id, toPatch(f));
+      await window.hush.profiles.update(profile.id, toPatch(f));
       savedRef.current = JSON.stringify(f);
       setStatus({ kind: "saved" });
       onSavedRef.current?.();
@@ -226,7 +226,7 @@ export function ProfileEditSheet({ profile, isRunning = false, onSaved }: Props)
     return () => {
       const { form: f, id } = latestRef.current;
       if (JSON.stringify(f) !== savedRef.current && !validate(f)) {
-        void window.multizen.profiles
+        void window.hush.profiles
           .update(id, toPatch(f))
           .then(() => onSavedRef.current?.())
           .catch(() => {

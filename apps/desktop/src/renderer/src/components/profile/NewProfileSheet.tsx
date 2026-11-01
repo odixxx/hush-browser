@@ -84,7 +84,7 @@ export function NewProfileSheet({ onCancel, onCreated, onDirtyChange }: Props): 
       let endpoint = "http://185.235.219.144:8095/api/proxy";
       let token = "";
       try {
-        const settings = await window.multizen.settings.get();
+        const settings = await window.hush.settings.get();
         if (settings.serviceToken) token = settings.serviceToken;
         if (settings.serviceApiUrl) {
           endpoint = settings.serviceApiUrl.replace(/\/+$/, "") + "/proxy";
@@ -123,8 +123,8 @@ export function NewProfileSheet({ onCancel, onCreated, onDirtyChange }: Props): 
   // Auto-generate a fingerprint preset on mount so the create call always
   // has one and the regen button has something to replace.
   useEffect(() => {
-    if (!window.multizen) return;
-    void window.multizen.fingerprint.generate().then(setFingerprint);
+    if (!window.hush) return;
+    void window.hush.fingerprint.generate().then(setFingerprint);
   }, []);
 
   // Track "dirty" — anything the user typed that's not the default. The
@@ -200,7 +200,7 @@ export function NewProfileSheet({ onCancel, onCreated, onDirtyChange }: Props): 
     setBusy(true);
     setError(null);
     try {
-      const created = await window.multizen.profiles.create({
+      const created = await window.hush.profiles.create({
         name: name.trim(),
         tags: tagList,
         icon,

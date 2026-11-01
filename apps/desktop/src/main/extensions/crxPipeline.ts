@@ -4,7 +4,7 @@ import { cp, mkdir, readdir, readFile, rename, rm, stat, writeFile } from "node:
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import extract from "extract-zip";
-import type { ExtensionConfig } from "@multizen/types";
+import type { ExtensionConfig } from "@hush/types";
 import { storeEntryDir } from "./extensionStore.ts";
 
 const MAX_UNPACKED_BYTES = 150 * 1024 * 1024; // ~150 MB cap per extension

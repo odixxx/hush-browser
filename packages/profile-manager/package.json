@@ -1,5 +1,5 @@
 {
-  "name": "@multizen/profile-manager",
+  "name": "@hush/profile-manager",
   "version": "0.2.9",
   "private": true,
   "type": "module",
@@ -13,12 +13,12 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@multizen/types": "workspace:*",
+    "@hush/types": "workspace:*",
     "better-sqlite3": "^11.7.0",
     "uuid": "^11.0.5"
   },
   "devDependencies": {
-    "@multizen/settings-store": "workspace:*",
+    "@hush/settings-store": "workspace:*",
     "@types/better-sqlite3": "^7.6.12",
     "@types/uuid": "^10.0.0",
     "tsx": "^4.19.2",

@@ -9,12 +9,12 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 
 const execFileP = promisify(execFile);
-import type { BrowserDriver } from "@multizen/mcp-server";
-import type { ProfileManager } from "@multizen/profile-manager";
-import type { ClientHints, FingerprintConfig, LaunchedProfile, ProfileId } from "@multizen/types";
+import type { BrowserDriver } from "@hush/mcp-server";
+import type { ProfileManager } from "@hush/profile-manager";
+import type { ClientHints, FingerprintConfig, LaunchedProfile, ProfileId } from "@hush/types";
 import { waitForCdpSessionReady } from "./cdpReadiness";
-import { resolveEngine, type BrowserEngine } from "@multizen/types";
-import { CdpSession } from "@multizen/cdp-driver";
+import { resolveEngine, type BrowserEngine } from "@hush/types";
+import { CdpSession } from "@hush/cdp-driver";
 import { EngineRegistry } from "./engineRegistry.ts";
 import { startBridgeForProfile, stopBridgeForProfile } from "./socks5Bridge";
 import { probeProxyGeo } from "./proxyGeo";
@@ -88,7 +88,7 @@ export interface ChromiumBrowserDriverOptions {
    *  haven't pinned one. Read live so a settings change takes effect. */
   getDefaultEngine: () => BrowserEngine;
   /**
-   * Called when the companion extension's "Add to MultiZen" button is clicked
+   * Called when the companion extension's "Add to Hush Browser" button is clicked
    * inside a running profile. `profileId` is the profile that made the call
    * (the CDP session is profile-scoped). The host installs the extension.
    */
@@ -259,13 +259,13 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
         }
         if (geo.timezone && geo.timezone !== fp.timezone) {
           console.log(
-            `[multizen] aligning fingerprint timezone ${fp.timezone} → ${geo.timezone} (proxy geo)`,
+            `[hush] aligning fingerprint timezone ${fp.timezone} → ${geo.timezone} (proxy geo)`,
           );
           fp = { ...fp, timezone: geo.timezone };
         }
       } catch (e) {
         console.warn(
-          "[multizen] proxy IP probe failed; continuing without geo alignment:",
+          "[hush] proxy IP probe failed; continuing without geo alignment:",
           (e as Error).message,
         );
       }
@@ -278,7 +278,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
     // PID and silently exits (the "socket hang up" the user sees: CDP
     // briefly opens, profile-in-use check fires, process bails).
     await cleanStaleSingletonLocks(browserDataDir).catch((e: unknown) => {
-      console.warn("[multizen] failed to clean Singleton locks:", (e as Error).message);
+      console.warn("[hush] failed to clean Singleton locks:", (e as Error).message);
     });
 
     // macOS records app crashes and on next launch shows
@@ -289,7 +289,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
     // bundle id, and turn off persistence in user defaults.
     if (process.platform === "darwin") {
       await disableMacOsPersistentStateRestore().catch((e: unknown) => {
-        console.warn("[multizen] persistent-state cleanup skipped:", (e as Error).message);
+        console.warn("[hush] persistent-state cleanup skipped:", (e as Error).message);
       });
     }
 
@@ -300,7 +300,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
     // Chromium doesn't skip restore or show a crash infobar. Mutated before
     // spawn (Chrome must be off to avoid corrupting the pref file).
     await ensureSessionRestore(browserDataDir).catch((e: unknown) => {
-      console.warn("[multizen] failed to write session restore preference:", (e as Error).message);
+      console.warn("[hush] failed to write session restore preference:", (e as Error).message);
     });
 
     // Chromium's --accept-lang flag expects a PLAIN comma-separated list
@@ -322,7 +322,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
           ? (await this.resolveSandboxDecision({ engine, binaryPath: chromiumPath })).noSandbox
           : fallbackNeedsNoSandbox();
       } catch (e) {
-        console.warn("[multizen] sandbox resolver failed; using fallback:", (e as Error).message);
+        console.warn("[hush] sandbox resolver failed; using fallback:", (e as Error).message);
         noSandbox = fallbackNeedsNoSandbox();
       }
     }
@@ -419,7 +419,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
       // and a SOCKS5 upstream makes it redundant anyway. Real anti-
       // detect products (Multilogin Mimic) solve the residual leak
       // with a custom DNS-resolver source patch — a Phase-1 item for
-      // multizen-pro, not the open-source build.
+      // hush-pro, not the open-source build.
       args.push("--disable-features=DnsOverHttps,DnsOverHttpsUpgrade,EncryptedClientHello,AsyncDns,DnsHttpsSvcb,DnsHttpsSvcbAlpn,NetworkPrediction");
       args.push("--dns-over-https-mode=off");
       args.push("--dns-prefetch-disable");
@@ -433,7 +433,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
     }
 
     // Browser extensions: load this profile's enabled extensions plus the
-    // bundled companion (the "Add to MultiZen" injector). Same flag pair
+    // bundled companion (the "Add to Hush Browser" injector). Same flag pair
     // CloakBrowser's own `extension_paths` emits; requires the persistent
     // user-data-dir we already use. Extensions live under the profile dir
     // (shared across engines), so we pass absolute paths.
@@ -460,7 +460,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
     // `Sec-CH-UA-Bitness`, etc.) and `navigator.userAgentData` are NOT
     // overridable via CLI flags. They are baked into the compiled Chromium
     // binary at build time. To make them coherent with our chosen `userAgent`
-    // we need our patched Chromium build (multizen-pro) which applies native
+    // we need our patched Chromium build (hush-pro) which applies native
     // overrides. Until that ships, system Chrome will emit its real Client
     // Hints and detection vendors will see a UA-vs-CH mismatch.
     //
@@ -557,7 +557,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
         // handles running-changed teardown.
         if (code !== 0 && code !== null) {
           process.stderr.write(
-            `[multizen] Chromium pid ${pid} exited code=${code} signal=${signal ?? "-"}\n`,
+            `[hush] Chromium pid ${pid} exited code=${code} signal=${signal ?? "-"}\n`,
           );
         }
         signalCrashIfConfirmed();
@@ -590,7 +590,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
         ({ child, session } = await attemptSpawn(noSandbox));
       } catch (e) {
         if (e instanceof SandboxStartupError && !noSandbox) {
-          console.warn("[multizen] sandbox failed to start; relaunching with --no-sandbox");
+          console.warn("[hush] sandbox failed to start; relaunching with --no-sandbox");
           // Profile was expected active but isn't — let the host re-offer setup.
           this.onSandboxInactive?.(chromiumPath);
           // The crashed child is dead (attemptSpawn awaited it); clear its stale
@@ -639,7 +639,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
         } catch (e) {
           const msg = (e as Error).message;
           if (!/already in effect/i.test(msg)) {
-            console.error("[multizen] setLocaleOverride (cloakbrowser) failed:", e);
+            console.error("[hush] setLocaleOverride (cloakbrowser) failed:", e);
           }
         }
         // Diagnostic: capture what the page actually sees AFTER overrides.
@@ -668,17 +668,17 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
           // Diagnostic only — gated behind MULTIZEN_DEBUG so it doesn't spam the
           // console on every launch (it also fires a few times as the context settles).
           if (value && process.env.MULTIZEN_DEBUG)
-            console.log("[multizen] post-bootstrap probe:", value);
+            console.log("[hush] post-bootstrap probe:", value);
         } catch (e) {
           // Non-fatal — diagnostic only.
           void e;
         }
       })
       .catch((e: unknown) => {
-        console.error("[multizen] CDP bootstrap failed:", e);
+        console.error("[hush] CDP bootstrap failed:", e);
       });
 
-    // Wire the companion's "Add to MultiZen" channel for this profile — scoped
+    // Wire the companion's "Add to Hush Browser" channel for this profile — scoped
     // to Web Store pages only (the host polls a DOM attribute there, never on
     // the user's normal browsing). The CDP session is profile-scoped, so any
     // signal belongs to this profileId — no cross-profile ambiguity.
@@ -748,7 +748,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
   async close(profileId: ProfileId): Promise<void> {
     const r = this.running.get(profileId);
     if (!r) return;
-    console.log(`[multizen] close() profile=${profileId} pid=${r.pid}`);
+    console.log(`[hush] close() profile=${profileId} pid=${r.pid}`);
     // Signal the terminating phase up front (covers MCP/external callers that
     // don't drive the button's local "Stopping…" state).
     this.emit("running-changed", { kind: "closing", profileId });
@@ -773,7 +773,7 @@ export class ChromiumBrowserDriver extends EventEmitter implements BrowserDriver
       // anyway so a stuck socket can never strand Stop.
       await withTimeout(stopBridgeForProfile(profileId), 2000);
     } finally {
-      console.log(`[multizen] close() done profile=${profileId} pid=${r.pid} alive=${isPidAlive(r.pid)}`);
+      console.log(`[hush] close() done profile=${profileId} pid=${r.pid} alive=${isPidAlive(r.pid)}`);
       this.emit("running-changed", { kind: "closed", profileId, reason: "user-close" });
     }
   }
@@ -1008,14 +1008,14 @@ async function gracefulShutdown(r: RunningProcess): Promise<void> {
   await withTimeout(r.session.close(), 1000);
 
   // 2. SIGTERM by PID (not r.child.kill — don't trust the child flags).
-  console.log(`[multizen] shutdown pid=${pid}: Browser.close didn't exit in 4s → SIGTERM`);
+  console.log(`[hush] shutdown pid=${pid}: Browser.close didn't exit in 4s → SIGTERM`);
   killPid(pid, "SIGTERM");
   if (await waitForPidDeath(pid, 2000)) return;
 
   // 3. SIGKILL — the kernel guarantees this. We poll to confirm the process is
   //    genuinely gone before returning, so close() never reports a false
   //    "closed" while Chromium is still on screen.
-  console.log(`[multizen] shutdown pid=${pid}: SIGTERM didn't exit in 2s → SIGKILL`);
+  console.log(`[hush] shutdown pid=${pid}: SIGTERM didn't exit in 2s → SIGKILL`);
   killPid(pid, "SIGKILL");
   await waitForPidDeath(pid, 2000);
 }
@@ -1045,7 +1045,7 @@ async function pidsUsingDataDir(dataDir: string): Promise<number[]> {
 async function killBrowsersUsingDataDir(dataDir: string): Promise<void> {
   const pids = await pidsUsingDataDir(dataDir);
   if (pids.length === 0) return;
-  console.log(`[multizen] sweep: SIGKILL ${pids.length} lingering proc(s) for ${dataDir}: ${pids.join(", ")}`);
+  console.log(`[hush] sweep: SIGKILL ${pids.length} lingering proc(s) for ${dataDir}: ${pids.join(", ")}`);
   for (const pid of pids) killPid(pid, "SIGKILL");
 }
 
@@ -1286,7 +1286,7 @@ async function cleanStaleSingletonLocks(dataDir: string): Promise<void> {
     if (pid !== null && !isPidAlive(pid)) {
       try {
         await fsp.unlink(path);
-        console.log(`[multizen] cleaned stale ${name} (was → ${target}, pid ${pid} not running)`);
+        console.log(`[hush] cleaned stale ${name} (was → ${target}, pid ${pid} not running)`);
       } catch {
         // ignore
       }
@@ -1297,7 +1297,7 @@ async function cleanStaleSingletonLocks(dataDir: string): Promise<void> {
     // no longer exists, remove the symlink even when no PID is encoded.
     if (name === "SingletonSocket" && !existsSync(target)) {
       await fsp.unlink(path).catch(() => {});
-      console.log(`[multizen] cleaned stale ${name} (missing target ${target})`);
+      console.log(`[hush] cleaned stale ${name} (missing target ${target})`);
     }
   }
 }
@@ -1330,7 +1330,7 @@ async function unlinkSingletonFiles(
     const path = join(dataDir, name);
     await fsp.unlink(path).catch(() => {});
   }
-  console.log(`[multizen] cleaned stale Singleton files (${reason})`);
+  console.log(`[hush] cleaned stale Singleton files (${reason})`);
 }
 
 /**
@@ -1381,7 +1381,7 @@ async function ensureSessionRestore(dataDir: string): Promise<void> {
 
   await fsp.mkdir(join(dataDir, "Default"), { recursive: true });
   // Atomic-ish write: write to .tmp then rename.
-  const tmpPath = `${prefsPath}.multizen.tmp`;
+  const tmpPath = `${prefsPath}.hush.tmp`;
   await fsp.writeFile(tmpPath, JSON.stringify(prefs));
   await fsp.rename(tmpPath, prefsPath);
 }

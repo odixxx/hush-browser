@@ -2,7 +2,7 @@ import type {
   ClientHints,
   DeviceFamily,
   FingerprintConfig,
-} from "@multizen/types";
+} from "@hush/types";
 
 /**
  * Coherent fingerprint generator.
@@ -22,7 +22,7 @@ import type {
  * Limit of this open-source generator: only fields injectable via Chromium
  * launch flags or runtime preload scripts can be applied without a patched
  * binary. Sec-CH-UA / navigator.userAgentData / TLS JA3-JA4 / Canvas-Audio
- * noise require the closed-source patched Chromium build (multizen-pro).
+ * noise require the closed-source patched Chromium build (hush-pro).
  * The fingerprint we generate stores those fields anyway so the patched
  * binary can apply them when it ships.
  */

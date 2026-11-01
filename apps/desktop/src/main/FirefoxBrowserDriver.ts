@@ -1,9 +1,9 @@
 import { EventEmitter } from "node:events";
 import { firefox, type BrowserContext, type Page } from "playwright-core";
 import { launchOptions } from "camoufox-js";
-import type { BrowserDriver } from "@multizen/mcp-server";
-import type { LaunchedProfile, Profile, ProfileId } from "@multizen/types";
-import type { ProfileManager } from "@multizen/profile-manager";
+import type { BrowserDriver } from "@hush/mcp-server";
+import type { LaunchedProfile, Profile, ProfileId } from "@hush/types";
+import type { ProfileManager } from "@hush/profile-manager";
 import { startBridgeForProfile, stopBridgeForProfile } from "./socks5Bridge";
 import { sanitizeStartUrl } from "./startPage";
 import type { RunningStateChange } from "./ChromiumBrowserDriver.ts";

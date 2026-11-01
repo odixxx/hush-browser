@@ -1,4 +1,4 @@
-import type { FingerprintConfig, Profile } from "@multizen/types";
+import type { FingerprintConfig, Profile } from "@hush/types";
 
 function osForDevice(device: string): "windows" | "macos" | "linux" {
   if (device.startsWith("mac") || device.startsWith("imac")) return "macos";

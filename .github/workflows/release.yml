@@ -108,7 +108,7 @@ jobs:
           # Skip mac code signing / notarization — open-source MVP runs
           # unsigned. Users get a Gatekeeper warning on first launch.
           CSC_IDENTITY_AUTO_DISCOVERY: false
-        run: yarn workspace @multizen/desktop ${{ matrix.script }}
+        run: yarn workspace @hush/desktop ${{ matrix.script }}
 
   # The release starts with a placeholder body. Once the builds finish, generate
   # a grouped changelog from Conventional Commits since the previous tag and set

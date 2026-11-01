@@ -361,7 +361,7 @@ function ContextLine({ profile }: { profile: TileData }): JSX.Element | null {
       >
         <Zap size={12} className="text-purple-400" />
         <span className="mono text-[11px] text-purple-200 truncate flex-1">
-          <span className="text-purple-400">multizen.</span>
+          <span className="text-purple-400">hush.</span>
           {profile.lastTool ?? "…"}
         </span>
         {profile.lastDuration && (

@@ -7,9 +7,9 @@ import type {
   UpdateProfileInput,
   LaunchedProfile,
   FingerprintConfig,
-} from "@multizen/types";
-import type { ActivityEvent } from "@multizen/mcp-server";
-import type { AppSettings } from "@multizen/settings-store";
+} from "@hush/types";
+import type { ActivityEvent } from "@hush/mcp-server";
+import type { AppSettings } from "@hush/settings-store";
 import type {
   BrowserEngine,
   ChromiumStatus,
@@ -19,9 +19,9 @@ import type {
   ProxyConfig,
   SandboxStatus,
   UpdateStatus,
-} from "@multizen/types";
+} from "@hush/types";
 
-/** Payload for the `extensions:installed` push (companion "Add to MultiZen"). */
+/** Payload for the `extensions:installed` push (companion "Add to Hush Browser"). */
 export type ExtensionInstalledEvent =
   | { ok: true; profileId: string; extension: ExtensionConfig }
   | { ok: false; profileId: string; error: string };
@@ -36,7 +36,7 @@ export interface ProxyGeoResult {
   latencyMs?: number;
 }
 
-/** Mirror of the catalog types from @multizen/profile-manager. */
+/** Mirror of the catalog types from @hush/profile-manager. */
 export interface DeviceCatalogEntry {
   family: DeviceFamily;
   label: string;
@@ -229,6 +229,8 @@ const api = {
   },
 };
 
+contextBridge.exposeInMainWorld("hush", api);
 contextBridge.exposeInMainWorld("multizen", api);
 
-export type MultizenApi = typeof api;
+export type HushApi = typeof api;
+export type MultizenApi = HushApi;

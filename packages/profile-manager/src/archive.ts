@@ -10,7 +10,7 @@ import {
   createDecipheriv,
 } from "node:crypto";
 import { promisify } from "node:util";
-import type { Profile } from "@multizen/types";
+import type { Profile } from "@hush/types";
 
 const scrypt = promisify(scryptCb);
 
@@ -163,7 +163,7 @@ export async function importProfile(
 ): Promise<Profile> {
   const buf = await readFile(archivePath);
   if (buf.subarray(0, 4).toString("ascii") !== MAGIC) {
-    throw new Error("Not a MultiZen archive");
+    throw new Error("Not a Hush Browser archive");
   }
   const version = buf.readUInt16BE(4);
   if (!SUPPORTED_VERSIONS.has(version)) {

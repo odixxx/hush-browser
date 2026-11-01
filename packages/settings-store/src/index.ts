@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
-import type { BrowserEngine } from "@multizen/types";
+import type { BrowserEngine } from "@hush/types";
 
 export type { BrowserEngine };
 

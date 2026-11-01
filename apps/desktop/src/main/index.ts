@@ -12,14 +12,14 @@ import {
   deviceCatalog,
   localeCatalog,
   findLocaleIdByCountry,
-} from "@multizen/profile-manager";
+} from "@hush/profile-manager";
 import {
   HttpTransport,
-  createMultizenMcpServer,
+  createHushMcpServer,
   type ActivityEvent,
   type ActivityLog,
-} from "@multizen/mcp-server";
-import { SettingsStore, defaultSettingsPath, type AppSettings } from "@multizen/settings-store";
+} from "@hush/mcp-server";
+import { SettingsStore, defaultSettingsPath, type AppSettings } from "@hush/settings-store";
 import { LinuxSandboxManager, describeSandboxReason } from "./linuxSandbox";
 import type {
   EngineUpdateStatus,
@@ -27,8 +27,8 @@ import type {
   ProxyConfig,
   SandboxStatus,
   UpdateStatus,
-} from "@multizen/types";
-import { isBrowserEngine, resolveEngine } from "@multizen/types";
+} from "@hush/types";
+import { isBrowserEngine, resolveEngine } from "@hush/types";
 import { ChromiumBrowserDriver } from "./ChromiumBrowserDriver.ts";
 import { EngineRegistry } from "./engineRegistry.ts";
 import { EngineRouter } from "./engineRouter.ts";
@@ -195,7 +195,7 @@ app.whenReady().then(async () => {
   )
     .then((res) => {
       if (res.removed > 0) {
-        process.stdout.write(`[multizen] extension-store sweep reclaimed ${res.removed} orphan(s)\n`);
+        process.stdout.write(`[hush] extension-store sweep reclaimed ${res.removed} orphan(s)\n`);
       }
     })
     .catch(() => {});
@@ -311,7 +311,7 @@ app.whenReady().then(async () => {
     extensionStoreRoot,
     resolveSandboxDecision: (ctx) => linuxSandbox.resolveForLaunch(ctx),
     onSandboxInactive: (binaryPath) => linuxSandbox.markBinaryInactive(binaryPath),
-    // The companion's "Add to MultiZen" button routes here (profile-scoped).
+    // The companion's "Add to Hush Browser" button routes here (profile-scoped).
     // Confirm natively first: any script on the store page could trigger the
     // channel, so an explicit OS dialog makes a drive-by install impossible.
     onCompanionInstall: (profileId, extensionId) => {
@@ -371,7 +371,7 @@ app.whenReady().then(async () => {
     chromiumDriver,
   });
 
-  const mcp = createMultizenMcpServer({ profileManager, browserDriver });
+  const mcp = createHushMcpServer({ profileManager, browserDriver });
   activityLog = mcp.activityLog;
 
   // Forward activity events to renderer
@@ -409,7 +409,7 @@ app.whenReady().then(async () => {
       // that reuses the same profileManager/browserDriver AND the shared
       // activityLog, so every transport's tool calls land in the one live feed.
       await httpTransport.start(
-        () => createMultizenMcpServer({ profileManager, browserDriver, activityLog }).server,
+        () => createHushMcpServer({ profileManager, browserDriver, activityLog }).server,
       );
     } catch (e) {
       // Port collision is non-fatal — log and continue
@@ -501,7 +501,7 @@ app.whenReady().then(async () => {
     } catch (e) {
       // The engine must be downloaded before we can target its binary; surface
       // that as a status instead of rejecting the invoke (unhandled in renderer).
-      console.warn("[multizen] sandbox:setup failed:", (e as Error).message);
+      console.warn("[hush] sandbox:setup failed:", (e as Error).message);
       return {
         state: "needs-setup",
         reasonText: "The browser engine needs to finish downloading before secure setup can run.",
@@ -658,7 +658,7 @@ app.whenReady().then(async () => {
         return reconcileFingerprint(current, patch);
       } catch (e) {
         if (e instanceof FingerprintReconcileError) {
-          console.warn("[multizen] fingerprint reconcile rejected:", e.message);
+          console.warn("[hush] fingerprint reconcile rejected:", e.message);
           return current;
         }
         throw e;
@@ -795,7 +795,7 @@ app.whenReady().then(async () => {
   // build → crashes on Intel Macs). Surface it as a visible dialog and quit
   // cleanly instead of a mystery no-window.
   const detail = e instanceof Error ? (e.stack ?? e.message) : String(e);
-  process.stderr.write(`[multizen] fatal startup error:\n${detail}\n`);
+  process.stderr.write(`[hush] fatal startup error:\n${detail}\n`);
   dialog.showErrorBox(
     "Hush Browser failed to start",
     `A startup step failed:\n\n${e instanceof Error ? e.message : String(e)}\n\n` +

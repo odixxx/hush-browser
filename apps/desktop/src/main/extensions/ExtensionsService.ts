@@ -1,7 +1,7 @@
 import { rm, stat } from "node:fs/promises";
 import { join } from "node:path";
-import type { ProfileManager } from "@multizen/profile-manager";
-import type { ExtensionConfig, Profile } from "@multizen/types";
+import type { ProfileManager } from "@hush/profile-manager";
+import type { ExtensionConfig, Profile } from "@hush/types";
 import { unpackToStore } from "./crxPipeline.ts";
 import { gcEntry } from "./extensionStore.ts";
 import { downloadCrxById, parseExtensionId } from "./webstoreDownload.ts";

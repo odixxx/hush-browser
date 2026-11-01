@@ -1,8 +1,8 @@
 import { EventEmitter } from "node:events";
-import { resolveEngine } from "@multizen/types";
-import type { BrowserEngine, LaunchedProfile, ProfileId } from "@multizen/types";
-import type { BrowserDriver } from "@multizen/mcp-server";
-import type { ProfileManager } from "@multizen/profile-manager";
+import { resolveEngine } from "@hush/types";
+import type { BrowserEngine, LaunchedProfile, ProfileId } from "@hush/types";
+import type { BrowserDriver } from "@hush/mcp-server";
+import type { ProfileManager } from "@hush/profile-manager";
 import type { EngineRegistry } from "./engineRegistry.ts";
 import { isChromiumEngine } from "./engineRegistry.ts";
 import {

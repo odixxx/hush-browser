@@ -12,7 +12,7 @@ import {
   deviceCatalog,
   localeCatalog,
 } from "../src/fingerprint.js";
-import type { FingerprintConfig } from "@multizen/types";
+import type { FingerprintConfig } from "@hush/types";
 
 interface InvariantResult {
   name: string;

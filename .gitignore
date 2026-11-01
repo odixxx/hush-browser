@@ -45,7 +45,7 @@ release-builds/
 *.sqlite3
 
 # private repo dependency (loaded as binary at build time)
-vendor/multizen-private/
+vendor/hush-private/
 
 !.gitkeep
 .claude/

@@ -4,14 +4,14 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-import type { ProfileManager } from "@multizen/profile-manager";
+import type { ProfileManager } from "@hush/profile-manager";
 import {
   generateFingerprint,
   reconcileFingerprint,
   FingerprintReconcileError,
   deviceCatalog,
   localeCatalog,
-} from "@multizen/profile-manager";
+} from "@hush/profile-manager";
 import type {
   LaunchedProfile,
   ProfileId,
@@ -19,7 +19,7 @@ import type {
   UpdateProfileInput,
   FingerprintConfig,
   ProxyConfig,
-} from "@multizen/types";
+} from "@hush/types";
 import { ActivityLog } from "./ActivityLog.js";
 
 // ── Security gates (engine-independent, enforced in the MCP dispatch layer) ──
@@ -177,7 +177,7 @@ function rawCdpEnabled(): boolean {
   // Fail-closed + unsurprising: only an explicit truthy value enables it, so
   // `=0` / `=false` / `=` (empty) / unset all stay OFF. (Avoids the `!!env`
   // footgun where any non-empty string — including "0" — reads as true.)
-  const v = (process.env.MULTIZEN_MCP_ALLOW_RAW_CDP ?? "").trim().toLowerCase();
+  const v = (process.env.HUSH_MCP_ALLOW_RAW_CDP ?? process.env.MULTIZEN_MCP_ALLOW_RAW_CDP ?? "").trim().toLowerCase();
   return v === "1" || v === "true" || v === "yes" || v === "on";
 }
 
@@ -221,14 +221,14 @@ export interface BrowserDriver {
   closeTab(profileId: ProfileId, targetId: string, sessionId?: string): Promise<unknown>;
 }
 
-export interface MultizenMcpServerOptions {
+export interface HushMcpServerOptions {
   profileManager: ProfileManager;
   browserDriver: BrowserDriver;
   /** Optional activity log; if not provided, a fresh one is created */
   activityLog?: ActivityLog;
 }
 
-export interface MultizenMcpServer {
+export interface HushMcpServer {
   server: Server;
   activityLog: ActivityLog;
 }
@@ -284,7 +284,7 @@ const NewTabSchema = ProfileIdSchema.extend({
 });
 
 /** Real device families a fingerprint can impersonate. MUST stay in lockstep
- *  with the `DeviceFamily` union in @multizen/types (and the DEVICES catalog);
+ *  with the `DeviceFamily` union in @hush/types (and the DEVICES catalog);
  *  call `list_fingerprint_options` for the human-readable catalog. */
 const DEVICE_FAMILIES = [
   "macbook-pro-14-m3",
@@ -370,8 +370,8 @@ const UpdateProfileSchema = ProfileIdSchema.extend({
  * and the non-obvious constraints (persistent profiles, visible windows,
  * headful only) that an agent can't infer from tool signatures alone.
  */
-const MULTIZEN_MCP_INSTRUCTIONS = [
-  "MultiZen drives real, persistent Chromium profiles — each has its own cookies, login state, fingerprint, and proxy, kept on disk between sessions.",
+const HUSH_MCP_INSTRUCTIONS = [
+  "Hush Browser drives real, persistent profiles — each has its own cookies, login state, fingerprint, and proxy, kept on disk between sessions.",
   "",
   "Workflow:",
   "1. Call list_profiles to see available profiles and which are already running.",
@@ -386,19 +386,19 @@ const MULTIZEN_MCP_INSTRUCTIONS = [
   "- Do not create or launch profiles in bulk to farm accounts; this tool supports autonomous execution of authorized workflows.",
 ].join("\n");
 
-export function createMultizenMcpServer(opts: MultizenMcpServerOptions): MultizenMcpServer {
+export function createHushMcpServer(opts: HushMcpServerOptions): HushMcpServer {
   const { profileManager, browserDriver } = opts;
   const activityLog = opts.activityLog ?? new ActivityLog();
 
   const server = new Server(
-    { name: "hush", version: "0.2.0-pre" },
+    { name: "hush-browser", version: "0.4.3" },
     {
       capabilities: {
         tools: {},
       },
       // Returned in the `initialize` result so a connecting agent learns the
       // overall workflow up front, not just per-tool descriptions.
-      instructions: MULTIZEN_MCP_INSTRUCTIONS,
+      instructions: HUSH_MCP_INSTRUCTIONS,
     },
   );
 
@@ -622,7 +622,7 @@ async function dispatch(
       // tool is also hidden from tools/list) unless explicitly enabled.
       if (!rawCdpEnabled()) {
         throw new CdpPolicyError(
-          "raw cdp_send is disabled. Set MULTIZEN_MCP_ALLOW_RAW_CDP=1 to enable it " +
+          "raw cdp_send is disabled. Set HUSH_MCP_ALLOW_RAW_CDP=1 to enable it " +
             "(power-user / trusted context); the curated tools (evaluate_js, get_cookies, " +
             "list_tabs, wait_for_*, …) cover normal use.",
         );
@@ -791,7 +791,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "extract",
     description:
-      "Snapshot the current page: returns the URL, title, and a trimmed accessibility tree. The calling LLM is responsible for parsing this into whatever structured data it needs. MultiZen does not call any external API.",
+      "Snapshot the current page: returns the URL, title, and a trimmed accessibility tree. The calling LLM is responsible for parsing this into whatever structured data it needs. Hush Browser does not call any external API.",
     inputSchema: {
       type: "object",
       required: ["profile_id"],
@@ -940,7 +940,7 @@ const TOOL_DEFINITIONS = [
   {
     name: "cdp_send",
     description:
-      "OPT-IN (requires MULTIZEN_MCP_ALLOW_RAW_CDP=1; off by default — prefer the curated tools). Send a raw Chrome DevTools Protocol command (stealth-safe). Any domain this call had to enable is auto-disabled afterwards so the anti-detect baseline is preserved; domains enabled at connect (Page) are never touched. On anti-detect engines, enabling a DCHECK-sensitive domain (Runtime/Network) is refused — use the convenience wrappers (evaluate_js, get_cookies, …) which need no enable. For safety, host-reaching and cross-origin-secret methods (IO.read, Fetch.*, Storage.getCookies, …) and privileged/local URL schemes (file:/chrome:/devtools:/view-source:) are rejected.",
+      "OPT-IN (requires HUSH_MCP_ALLOW_RAW_CDP=1; off by default — prefer the curated tools). Send a raw Chrome DevTools Protocol command (stealth-safe). Any domain this call had to enable is auto-disabled afterwards so the anti-detect baseline is preserved; domains enabled at connect (Page) are never touched. On anti-detect engines, enabling a DCHECK-sensitive domain (Runtime/Network) is refused — use the convenience wrappers (evaluate_js, get_cookies, …) which need no enable. For safety, host-reaching and cross-origin-secret methods (IO.read, Fetch.*, Storage.getCookies, …) and privileged/local URL schemes (file:/chrome:/devtools:/view-source:) are rejected.",
     inputSchema: {
       type: "object",
       required: ["profile_id", "method"],

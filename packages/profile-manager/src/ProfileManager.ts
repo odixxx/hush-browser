@@ -12,7 +12,7 @@ import type {
   FingerprintConfig,
   ExtensionConfig,
   BrowserEngine,
-} from "@multizen/types";
+} from "@hush/types";
 import { defaultFingerprint } from "./fingerprint.js";
 
 interface ProfileRow {

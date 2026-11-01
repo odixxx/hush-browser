@@ -15,9 +15,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const APP_NAME = "MultiZen";
-// Distinct from the production bundle id (`com.multizen.app`) so dev and
+// Distinct from the production bundle id (`com.hush.app`) so dev and
 // prod keep separate macOS preferences / Launch Services entries.
-const APP_ID = "com.multizen.dev";
+const APP_ID = "com.hush.dev";
 const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const candidates = [
   // Hoisted at desktop workspace level (yarn 4 node-modules linker is unpredictable).
@@ -47,7 +47,7 @@ patched = patched.replace(
 );
 if (patched !== original) {
   fs.writeFileSync(plistPath, patched);
-  console.log(`[multizen] Patched ${path.relative(repoRoot, plistPath)} → ${APP_NAME} / ${APP_ID}`);
+  console.log(`[hush] Patched ${path.relative(repoRoot, plistPath)} → ${APP_NAME} / ${APP_ID}`);
 }
 
 // Some macOS versions read names from `Contents/Resources/en.lproj/InfoPlist.strings`
@@ -66,10 +66,10 @@ try {
   const existing = fs.existsSync(stringsPath) ? fs.readFileSync(stringsPath, "utf8") : "";
   if (existing !== content) {
     fs.writeFileSync(stringsPath, content);
-    console.log(`[multizen] Wrote ${path.relative(repoRoot, stringsPath)}`);
+    console.log(`[hush] Wrote ${path.relative(repoRoot, stringsPath)}`);
   }
 } catch (e) {
-  console.warn("[multizen] InfoPlist.strings write skipped:", e.message);
+  console.warn("[hush] InfoPlist.strings write skipped:", e.message);
 }
 
 const { execFileSync } = require("node:child_process");
@@ -79,7 +79,7 @@ try {
   // Touch the .app so LS notices a change.
   fs.utimesSync(appPath, new Date(), new Date());
   execFileSync(lsregister, ["-f", appPath], { stdio: "ignore" });
-  console.log("[multizen] Refreshed Launch Services cache for", path.basename(appPath));
+  console.log("[hush] Refreshed Launch Services cache for", path.basename(appPath));
 } catch (e) {
-  console.warn("[multizen] lsregister refresh skipped:", e.message);
+  console.warn("[hush] lsregister refresh skipped:", e.message);
 }

@@ -120,7 +120,7 @@ function Row({ event, profile }: { event: ActivityEvent; profile?: ProfileSummar
     >
       <div className="mono text-[11px] text-slate-500">{formatTime(event.timestamp)}</div>
       <div className="mono text-[12px] text-slate-300 truncate">
-        <span className="text-purple-400">multizen.</span>
+        <span className="text-purple-400">hush.</span>
         {event.tool}
       </div>
       <div className="flex flex-col gap-[2px] min-w-0">

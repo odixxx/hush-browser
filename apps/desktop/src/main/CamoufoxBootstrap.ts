@@ -8,7 +8,7 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import { app, net } from "electron";
 import extract from "extract-zip";
-import type { ChromiumStatus } from "@multizen/types";
+import type { ChromiumStatus } from "@hush/types";
 import type { EngineBootstrap } from "./engineRegistry.ts";
 
 const execFileP = promisify(execFile);
