@@ -1,0 +1,139 @@
+appId: com.multizen.desktop
+productName: MultiZen
+# Pinned to the version in package.json devDependencies so electron-builder
+# does not need to introspect node_modules. Bump in sync when upgrading.
+electronVersion: 33.2.0
+directories:
+  output: release
+  buildResources: ../../build
+
+files:
+  - "out/**/*"
+  - "package.json"
+  - "!**/*.map"
+  - "!node_modules/@multizen/**"
+
+# Override package.json metadata in the packaged app. We strip the
+# @multizen/* workspace deps because electron-vite has already inlined
+# them into out/main/index.js — there's no runtime need for the
+# symlinked dirs in node_modules/@multizen/. Without this override,
+# electron-builder follows the symlinks to packages/<x>/package.json,
+# which is outside apps/desktop, and refuses to package
+# ("package.json must be under apps/desktop").
+extraMetadata:
+  dependencies:
+    "@modelcontextprotocol/sdk": "^1.0.4"
+    better-sqlite3: "^11.7.0"
+    chrome-remote-interface: "^0.33.3"
+    extract-zip: "^2.0.1"
+    framer-motion: "^12.0.0"
+    https-proxy-agent: "^9.0.0"
+    lucide-react: "^0.469.0"
+    proxy-chain: "^2.7.1"
+    socks: "^2.8.3"
+    socks-proxy-agent: "^10.0.0"
+    uuid: "^11.0.5"
+    # Camoufox (Firefox) engine — lazy-loaded at runtime, so (unlike the inlined
+    # Chromium path) they must be packaged into node_modules. Pinned to the
+    # security-reviewed versions; their transitive native deps (impit,
+    # better-sqlite3 — deduped to 11.10.0, adm-zip, …) are pulled in + rebuilt
+    # for the Electron ABI automatically.
+    camoufox-js: "0.12.0"
+    playwright-core: "1.60.0"
+
+# Native modules (better-sqlite3 has a .node C++ binding) cannot be
+# loaded from inside an asar archive — Node's require() can't dlopen
+# a file that doesn't exist on the real filesystem. Unpack them so
+# the .node files end up at .../app.asar.unpacked/ on disk. Pattern
+# covers any future native deps too.
+asarUnpack:
+  - "**/*.node"
+  - "node_modules/better-sqlite3/**/*"
+  # Camoufox (Firefox) engine: playwright-core spawns a driver process and
+  # camoufox-js reads bundled data-files + spawns the browser, so both must live
+  # on the real filesystem, not inside the asar archive. (`**/*.node` above
+  # already covers their native bindings: the deduped better-sqlite3 + impit.)
+  - "node_modules/playwright-core/**/*"
+  - "node_modules/camoufox-js/**/*"
+
+# Bundled first-party "companion" extension (injects the "Add to MultiZen"
+# button on Web Store pages). Copied verbatim into <resources>/companion so the
+# driver can pass it to --load-extension for every profile.
+extraResources:
+  - from: resources/companion
+    to: companion
+  # Linux-only: the static AppArmor-profile installer run once via pkexec to
+  # re-permit the Chromium sandbox on restricted-userns kernels. Shipped
+  # read-only; resolved at runtime from process.resourcesPath/linux-sandbox.
+  - from: resources/linux
+    to: linux-sandbox
+
+# Stable artifact names — no version baked in. The GitHub Releases page
+# still surfaces the version (from package.json) in the release title,
+# but the asset URLs stay predictable:
+#   /releases/latest/download/MultiZen-mac-arm64.dmg
+#   /releases/latest/download/MultiZen-mac-x64.dmg
+#   /releases/latest/download/MultiZen-win-x64.exe
+#   /releases/latest/download/MultiZen-linux-x86_64.AppImage
+#     (electron-builder hardcodes the x86_64 suffix on AppImage,
+#      regardless of artifactName — the landing links to that exact name)
+# This lets the landing page hardcode links that never need updating.
+mac:
+  category: public.app-category.developer-tools
+  icon: ../../build/icon.icns
+  # NO hardcoded arch here on purpose. The release workflow builds each macOS
+  # arch on a runner of that arch and passes the arch via the CLI
+  # (`electron-builder --mac --x64` / `--arm64`). If we listed `arch: [x64, arm64]`
+  # here, the config would win over the CLI flag and EACH runner would build
+  # BOTH arches into one shared node_modules — the second arch's @electron/rebuild
+  # overwrites the native better-sqlite3 .node, and the first arch's package
+  # (built concurrently) ships the wrong-arch .node. That shipped an arm64
+  # better_sqlite3.node inside the x64 app and crashed every Intel Mac on launch
+  # (issue #19). Leaving arch unset makes the CLI flag select exactly one arch
+  # per runner, so the native module always matches the package.
+  target:
+    - dmg
+    - zip
+  artifactName: "${productName}-mac-${arch}.${ext}"
+  # Open-source unsigned build: skip Apple notarization (would need a
+  # $99/yr Developer ID). We use ad-hoc signing (identity "-") so the
+  # binary has at least *some* signature — without it, macOS Sequoia
+  # shows the scary "is damaged" Gatekeeper dialog with no override.
+  # With ad-hoc sig the user can right-click → Open, or run
+  # `xattr -cr /Applications/MultiZen.app` to strip the quarantine bit.
+  # Both paths are documented in the release notes.
+  hardenedRuntime: false
+  gatekeeperAssess: false
+  notarize: false
+  identity: "-"
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: "${productName}-win-${arch}.${ext}"
+  icon: ../../build/icon.png
+  signAndEditExecutable: false
+
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+  artifactName: "${productName}-linux-${arch}.${ext}"
+  icon: ../../build/icons
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+
+publish:
+  provider: github
+  owner: multizenteam
+  repo: multizen-browser
+  # Cut a published release (not draft) directly from CI. Default is
+  # draft which means /releases/latest redirector misses it until a
+  # human un-drafts manually — we don't want that friction.
+  releaseType: release

@@ -1,0 +1,38 @@
+{
+  "name": "multizen",
+  "version": "0.4.1",
+  "private": true,
+  "description": "AI-native browser for agents and operators — desktop app + MCP server with anti-detect Chromium",
+  "homepage": "https://getmultizen.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/multizenteam/multizen-browser.git"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspace @multizen/desktop dev",
+    "build": "yarn workspaces foreach -A run build",
+    "typecheck": "yarn workspaces foreach -A run typecheck",
+    "lint": "yarn workspaces foreach -A run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md,astro}\"",
+    "mcp:dev": "yarn workspace @multizen/mcp-server dev",
+    "clean": "rm -rf apps/*/dist apps/*/out packages/*/dist node_modules/.cache"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.4.0",
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "yarn@4.5.0",
+  "resolutions": {
+    "better-sqlite3": "11.10.0",
+    "adm-zip": ">=0.6.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

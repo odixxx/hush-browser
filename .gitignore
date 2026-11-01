@@ -1,0 +1,67 @@
+# dependencies
+node_modules/
+.yarn/cache
+.yarn/install-state.gz
+.pnp.*
+
+# build outputs
+dist/
+out/
+build/
+*.tsbuildinfo
+# but keep electron-builder icon inputs (master + .icns + PNG set)
+!build/icon.png
+!build/icon.icns
+!build/icons/
+!build/icons/*.png
+
+# logs
+*.log
+*.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+thumbs.db
+*.swp
+
+# electron-builder artifacts
+release/
+release-builds/
+
+# local SQLite databases (dev only)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# private repo dependency (loaded as binary at build time)
+vendor/multizen-private/
+
+!.gitkeep
+.claude/
+
+# Internal strategy / planning docs — never committed
+docs/
+notes/
+specs/
+INTERNAL_*.md
+
+# Markdown is internal working material — the only doc we ship is README.md
+# (at any depth). Everything else (CONTRIBUTING, ROADMAP, specs, notes…) stays
+# local and out of git.
+*.md
+!README.md
+
+# Python bytecode caches
+__pycache__/
+*.pyc
