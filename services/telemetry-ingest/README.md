@@ -21,7 +21,7 @@ useradd --system --home /opt/multizen-telemetry --shell /usr/sbin/nologin mztel 
 install -d -o mztel -g mztel /opt/multizen-telemetry
 
 # 2. Clone the repo (public) — the service lives under services/telemetry-ingest
-git clone --depth 1 https://github.com/multizenteam/multizen-browser \
+git clone --depth 1 https://github.com/odixxx/hush-browser \
   /opt/multizen-telemetry/repo
 chown -R mztel:mztel /opt/multizen-telemetry/repo
 

@@ -390,7 +390,7 @@ export function Settings({ onImport }: Props): JSX.Element {
               Import .mzar archive
             </button>
             <a
-              href="https://github.com/multizenteam/multizen-browser#archives"
+              href="https://github.com/odixxx/hush-browser#archives"
               target="_blank"
               rel="noopener"
               className="btn-ghost px-3 py-[7px] text-[12px] rounded-[9px]"

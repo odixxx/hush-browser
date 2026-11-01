@@ -11,18 +11,18 @@
   </p>
 
   <p>
-    <a href="https://github.com/multizenteam/multizen-browser/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/multizenteam/multizen-browser?style=for-the-badge&color=8b5cf6&labelColor=0a0b0f"></a>
-    <a href="https://github.com/multizenteam/multizen-browser/blob/master/LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/multizenteam/multizen-browser?style=for-the-badge&color=ec4899&labelColor=0a0b0f"></a>
-    <a href="https://github.com/multizenteam/multizen-browser/actions/workflows/release.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/multizenteam/multizen-browser/release.yml?style=for-the-badge&labelColor=0a0b0f"></a>
-    <a href="https://github.com/multizenteam/multizen-browser/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/multizenteam/multizen-browser/total?style=for-the-badge&color=3b82f6&labelColor=0a0b0f"></a>
-    <a href="https://github.com/multizenteam/multizen-browser/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/multizenteam/multizen-browser?style=for-the-badge&color=ff6b35&labelColor=0a0b0f"></a>
+    <a href="https://github.com/odixxx/hush-browser/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/odixxx/hush-browser?style=for-the-badge&color=8b5cf6&labelColor=0a0b0f"></a>
+    <a href="https://github.com/odixxx/hush-browser/blob/master/LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/odixxx/hush-browser?style=for-the-badge&color=ec4899&labelColor=0a0b0f"></a>
+    <a href="https://github.com/odixxx/hush-browser/actions/workflows/release.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/odixxx/hush-browser/release.yml?style=for-the-badge&labelColor=0a0b0f"></a>
+    <a href="https://github.com/odixxx/hush-browser/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/odixxx/hush-browser/total?style=for-the-badge&color=3b82f6&labelColor=0a0b0f"></a>
+    <a href="https://github.com/odixxx/hush-browser/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/odixxx/hush-browser?style=for-the-badge&color=ff6b35&labelColor=0a0b0f"></a>
     <a href="https://discord.gg/pd6MhzPbJ3"><img alt="Discord" src="https://img.shields.io/badge/discord-join-5865f2?style=for-the-badge&labelColor=0a0b0f"></a>
   </p>
 
   <p>
     <a href="https://getmultizen.com"><strong>getmultizen.com</strong></a>
     &nbsp;·&nbsp;
-    <a href="https://github.com/multizenteam/multizen-browser/releases/latest">Download</a>
+    <a href="https://github.com/odixxx/hush-browser/releases/latest">Download</a>
     &nbsp;·&nbsp;
     <a href="https://discord.gg/pd6MhzPbJ3">Discord</a>
   </p>
@@ -60,11 +60,11 @@ The result: your AI agent in Cursor or Claude Desktop can complete real authenti
 The cleanest path. Homebrew handles the Gatekeeper quarantine for you:
 
 ```sh
-brew tap multizenteam/multizen
+brew tap odixxx/hush-browser
 brew install --cask multizen
 ```
 
-Or grab the DMG straight from the [releases page](https://github.com/multizenteam/multizen-browser/releases/latest) and run this once after install to bypass the unsigned-app warning:
+Or grab the DMG straight from the [releases page](https://github.com/odixxx/hush-browser/releases/latest) and run this once after install to bypass the unsigned-app warning:
 
 ```sh
 xattr -cr /Applications/MultiZen.app
@@ -73,7 +73,7 @@ xattr -cr /Applications/MultiZen.app
 ### Linux
 
 ```sh
-curl -LO https://github.com/multizenteam/multizen-browser/releases/latest/download/MultiZen-linux-x86_64.AppImage
+curl -LO https://github.com/odixxx/hush-browser/releases/latest/download/MultiZen-linux-x86_64.AppImage
 chmod +x MultiZen-linux-x86_64.AppImage
 ./MultiZen-linux-x86_64.AppImage
 ```
@@ -86,7 +86,7 @@ Prefer to do it by hand? Settings shows the exact command; it writes `/etc/appar
 
 ### Windows
 
-Download [MultiZen-win-x64.exe](https://github.com/multizenteam/multizen-browser/releases/latest/download/MultiZen-win-x64.exe). SmartScreen may flag the installer as unrecognized on first download. Click **More info**, then **Run anyway**.
+Download [MultiZen-win-x64.exe](https://github.com/odixxx/hush-browser/releases/latest/download/MultiZen-win-x64.exe). SmartScreen may flag the installer as unrecognized on first download. Click **More info**, then **Run anyway**.
 
 ### One-liner installer
 
@@ -209,7 +209,7 @@ Restart your client. The agent now has the full tool set — profile lifecycle (
 ## Develop
 
 ```sh
-git clone https://github.com/multizenteam/multizen-browser
+git clone https://github.com/odixxx/hush-browser
 cd multizen-browser
 yarn install
 yarn dev            # launch the desktop app in dev mode

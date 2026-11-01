@@ -1,12 +1,12 @@
 {
-  "name": "multizen",
+  "name": "hush-browser",
   "version": "0.4.1",
   "private": true,
-  "description": "AI-native browser for agents and operators — desktop app + MCP server with anti-detect Chromium",
-  "homepage": "https://getmultizen.com",
+  "description": "Hush Browser — stealth antidetect browser with native MCP integration for AI agents",
+  "homepage": "https://github.com/odixxx/hush-browser",
   "repository": {
     "type": "git",
-    "url": "https://github.com/multizenteam/multizen-browser.git"
+    "url": "https://github.com/odixxx/hush-browser.git"
   },
   "license": "MIT",
   "workspaces": [
