@@ -67,6 +67,7 @@ export const CATALOG_EXTENSIONS: CatalogExtension[] = [
   { id: "bfnaelmomeimhlpmgjnjophhpkkoljpa", name: "Phantom", description: "Multichain crypto wallet for DeFi and NFTs", category: "password" },
 
   // Developer tools
+  { id: "hlkenndednhfkekhgcdicdfddnkalmdm", name: "Cookie-Editor", description: "Inspect, export and import cookies easily (JSON/Netscape)", category: "developer" },
   { id: "fmkadmapgofadopljbjfkapdkoienihi", name: "React Developer Tools", description: "Adds React debugging to Chrome DevTools", category: "developer" },
   { id: "lmhkpmbekcpmknklioeibfkpmmfibljd", name: "Redux DevTools", description: "Inspect Redux application state changes", category: "developer" },
   { id: "gppongmhjkpfnbhagpmjfkannfbllamg", name: "Wappalyzer - Technology profiler", description: "Identify technologies used on websites", category: "developer" },
@@ -84,4 +85,41 @@ export const CATALOG_EXTENSIONS: CatalogExtension[] = [
   { id: "bmnlcjabgnpnenekpadlanbbkooimhnj", name: "PayPal Honey: Automated Coupons & Rewards", description: "Finds coupon codes and rewards when shopping", category: "social" },
   { id: "chhjbpecpncaggjpdakmflnfcopglcmi", name: "Rakuten: Get Cash Back For Shopping", description: "Earn cash back at online stores", category: "social" },
   { id: "neebplgakaahbhdphmkckjjcegoiijjo", name: "Keepa - Amazon Price Tracker", description: "Amazon price history charts and drop alerts", category: "social" },
+];
+
+
+export interface EssentialExtension {
+  id: string;
+  name: string;
+  version: string;
+  categoryBadge: string;
+  description: string;
+  defaultEnabled: boolean;
+}
+
+export const HUSH_ESSENTIAL_EXTENSIONS: EssentialExtension[] = [
+  {
+    id: "ddkjiahejlhfcafbddmgiahcphecmpfh",
+    name: "uBlock Origin Lite",
+    version: "2026.1026.1812",
+    categoryBadge: "Блокировщик рекламы & трекеров",
+    description: "Блокировка рекламы, фишинга, скрытых майнеров и трекеров сайтов (Manifest V3)",
+    defaultEnabled: true,
+  },
+  {
+    id: "hlkenndednhfkekhgcdicdfddnkalmdm",
+    name: "Cookie-Editor",
+    version: "1.13.0",
+    categoryBadge: "Управление сессиями & куками",
+    description: "Просмотр, быстрый экспорт и импорт куки-сессий в JSON и Netscape форматах",
+    defaultEnabled: true,
+  },
+  {
+    id: "edibdbjcniadpccecjdfdjjppcpchdlm",
+    name: "I still don't care about cookies",
+    version: "1.1.9",
+    categoryBadge: "Чистый серфинг без баннеров",
+    description: "Автоматическое скрытие навязчивых баннеров согласия куки и GDPR-попапов",
+    defaultEnabled: true,
+  },
 ];

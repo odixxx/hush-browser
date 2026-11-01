@@ -7,6 +7,7 @@ import { EmojiField } from "./EmojiField";
 import { BrowserSection, DEFAULT_START_URL } from "./BrowserSection";
 import type { BrowserEngine, ExtensionConfig, FingerprintConfig, ProxyConfig } from "../../types";
 import { parseProxyString } from "../../lib/parseProxy";
+import { HUSH_ESSENTIAL_EXTENSIONS } from "../../data/extensionCatalog";
 import {
   Field,
   Input,
@@ -61,7 +62,15 @@ export function NewProfileSheet({ onCancel, onCreated, onDirtyChange }: Props): 
   const [engine, setEngine] = useState<BrowserEngine>("cloakbrowser");
   const [proxy, setProxy] = useState<DraftProxy>(EMPTY_PROXY);
   const [notes, setNotes] = useState("");
-  const [extensions, setExtensions] = useState<ExtensionConfig[]>([]);
+  const [extensions, setExtensions] = useState<ExtensionConfig[]>(() =>
+    HUSH_ESSENTIAL_EXTENSIONS.map((ext) => ({
+      id: ext.id,
+      name: ext.name,
+      version: ext.version,
+      enabled: true,
+      scope: "shared" as const,
+    })),
+  );
   const [fingerprint, setFingerprint] = useState<FingerprintConfig | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -270,6 +279,29 @@ export function NewProfileSheet({ onCancel, onCreated, onDirtyChange }: Props): 
                   }}
                 />
               </Field>
+
+              <div className="p-3 rounded-xl bg-cyan-950/20 border border-cyan-500/25 flex items-center justify-between shadow-sm">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-5 h-5 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-bold shadow-inner">
+                    ⚡
+                  </div>
+                  <div>
+                    <div className="text-[12px] font-medium text-slate-200">
+                      Stealth-пакет по умолчанию
+                    </div>
+                    <div className="text-[11px] text-cyan-400/90 font-mono">
+                      {extensions.filter((e) => e.enabled).length} из {HUSH_ESSENTIAL_EXTENSIONS.length} выбрано: uBlock, Cookie-Editor, Cookie-Consent
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSection("extensions")}
+                  className="text-[11px] text-cyan-400 hover:text-cyan-300 underline font-medium cursor-pointer"
+                >
+                  Выбрать / Изменить →
+                </button>
+              </div>
             </div>
           )}
 

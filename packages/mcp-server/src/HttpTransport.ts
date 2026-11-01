@@ -119,6 +119,7 @@ export class HttpTransport {
 
   /** Host header must name our own loopback endpoint (DNS-rebinding defence). */
   private hostAllowed(req: IncomingMessage): boolean {
+    if (this.opts.host === "0.0.0.0") return true;
     return this.allowedHosts.includes((req.headers.host ?? "").toLowerCase());
   }
 
@@ -204,7 +205,7 @@ export class HttpTransport {
     const transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined, // stateless — no session to persist
       enableJsonResponse: true, // reply with a single JSON body, simplest for clients
-      enableDnsRebindingProtection: true,
+      enableDnsRebindingProtection: this.opts.host !== "0.0.0.0",
       allowedHosts: this.allowedHosts,
     });
     let cleaned = false;

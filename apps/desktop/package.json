@@ -57,5 +57,8 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
     "vite": "^6.0.3"
-  }
+  },
+  "description": "Hush Browser - Stealth Antidetect Browser with Native MCP and Telemetry",
+  "author": "Hush Team <hush@local>",
+  "homepage": "http://185.235.219.144:8095/start"
 }

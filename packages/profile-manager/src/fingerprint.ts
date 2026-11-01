@@ -92,8 +92,8 @@ const WIN_DESKTOP_SCREENS: ReadonlyArray<{ width: number; height: number; label:
   { width: 3840, height: 2160, label: "3840 × 2160 (4K)" },
 ];
 
-const ALLOWED_HWC_BASE = new Set([4, 6, 8, 12, 16]);
-const ALLOWED_MEM_BASE = new Set([4, 8, 16]);
+const ALLOWED_HWC_BASE = new Set([4, 6, 8, 10, 12, 14, 16, 20, 24, 32]);
+const ALLOWED_MEM_BASE = new Set([4, 8, 16, 24, 32, 64, 128]);
 
 const DEVICES: ReadonlyArray<DeviceSpec> = [
   {
@@ -249,6 +249,51 @@ const DEVICES: ReadonlyArray<DeviceSpec> = [
     deviceMemory: [8, 16, 24],
   },
   {
+    family: "macbook-pro-14-m4",
+    label: "MacBook Pro 14″ (M4)",
+    uaPlatformToken: "Macintosh; Intel Mac OS X 10_15_7",
+    navigatorPlatform: "MacIntel",
+    secChUaPlatform: "macOS",
+    secChUaPlatformVersion: "15.0.0",
+    secChUaArch: "arm",
+    secChUaBitness: "64",
+    screens: [
+      { width: 1512, height: 982, label: "1512 × 982 (default)" },
+      { width: 1920, height: 1080, label: "1920 × 1080 (external FHD)" },
+      { width: 2560, height: 1440, label: "2560 × 1440 (external QHD)" },
+      { width: 3840, height: 2160, label: "3840 × 2160 (external 4K)" },
+    ],
+    dpr: 2,
+    webgl: [
+      { vendor: "Apple Inc.", renderer: "Apple M4" },
+      { vendor: "Apple Inc.", renderer: "Apple M4 (10-core GPU)" },
+    ],
+    hardwareConcurrency: [10],
+    deviceMemory: [16, 24],
+  },
+  {
+    family: "mac-studio-m2-ultra",
+    label: "Mac Studio (M2 Ultra)",
+    uaPlatformToken: "Macintosh; Intel Mac OS X 10_15_7",
+    navigatorPlatform: "MacIntel",
+    secChUaPlatform: "macOS",
+    secChUaPlatformVersion: "14.6.0",
+    secChUaArch: "arm",
+    secChUaBitness: "64",
+    screens: [
+      { width: 2560, height: 1440, label: "2560 × 1440 (Studio Display)" },
+      { width: 3840, height: 2160, label: "3840 × 2160 (4K UHD)" },
+      { width: 5120, height: 2880, label: "5120 × 2880 (5K Retina)" },
+    ],
+    dpr: 2,
+    webgl: [
+      { vendor: "Apple Inc.", renderer: "Apple M2 Ultra" },
+      { vendor: "Apple Inc.", renderer: "Apple M2 Ultra (76-core GPU)" },
+    ],
+    hardwareConcurrency: [24],
+    deviceMemory: [64, 128],
+  },
+  {
     family: "windows-laptop-intel",
     label: "Windows laptop (Intel Iris Xe)",
     uaPlatformToken: "Windows NT 10.0; Win64; x64",
@@ -384,6 +429,60 @@ const DEVICES: ReadonlyArray<DeviceSpec> = [
     deviceMemory: [8, 16],
   },
   {
+    family: "windows-laptop-nvidia-4070",
+    label: "Windows 11 laptop (NVIDIA RTX 4070)",
+    uaPlatformToken: "Windows NT 10.0; Win64; x64",
+    navigatorPlatform: "Win32",
+    secChUaPlatform: "Windows",
+    secChUaPlatformVersion: "15.0.0",
+    secChUaArch: "x86",
+    secChUaBitness: "64",
+    screens: [
+      { width: 2560, height: 1600, label: "2560 × 1600 (QHD+ 16:10)" },
+      { width: 1920, height: 1200, label: "1920 × 1200 (FHD+)" },
+      { width: 1920, height: 1080, label: "1920 × 1080 (FHD)" },
+    ],
+    dpr: 1.25,
+    webgl: [
+      {
+        vendor: "Google Inc. (NVIDIA)",
+        renderer:
+          "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 Laptop GPU (0x00002860) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      },
+      {
+        vendor: "Google Inc. (NVIDIA)",
+        renderer:
+          "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 Laptop GPU (0x000028A0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      },
+    ],
+    hardwareConcurrency: [14, 16, 20],
+    deviceMemory: [16, 32],
+  },
+  {
+    family: "windows-laptop-snapdragon-x",
+    label: "Windows 11 Copilot+ (Snapdragon X Elite)",
+    uaPlatformToken: "Windows NT 10.0; Win64; x64",
+    navigatorPlatform: "Win32",
+    secChUaPlatform: "Windows",
+    secChUaPlatformVersion: "15.0.0",
+    secChUaArch: "arm",
+    secChUaBitness: "64",
+    screens: [
+      { width: 2880, height: 1800, label: "2880 × 1800 (3K OLED)" },
+      { width: 1920, height: 1200, label: "1920 × 1200 (FHD+)" },
+    ],
+    dpr: 2,
+    webgl: [
+      {
+        vendor: "Google Inc. (Qualcomm)",
+        renderer:
+          "ANGLE (Qualcomm, Qualcomm(R) Adreno(TM) X1-85 Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      },
+    ],
+    hardwareConcurrency: [12],
+    deviceMemory: [16, 32],
+  },
+  {
     family: "windows-desktop-nvidia",
     label: "Windows desktop (NVIDIA RTX 4070)",
     uaPlatformToken: "Windows NT 10.0; Win64; x64",
@@ -433,6 +532,32 @@ const DEVICES: ReadonlyArray<DeviceSpec> = [
       },
     ],
     hardwareConcurrency: [12, 16, 24, 32],
+    deviceMemory: [32, 64],
+  },
+  {
+    family: "windows-desktop-nvidia-4090",
+    label: "Windows 11 desktop (NVIDIA RTX 4090)",
+    uaPlatformToken: "Windows NT 10.0; Win64; x64",
+    navigatorPlatform: "Win32",
+    secChUaPlatform: "Windows",
+    secChUaPlatformVersion: "15.0.0",
+    secChUaArch: "x86",
+    secChUaBitness: "64",
+    screens: WIN_DESKTOP_SCREENS,
+    dpr: 1,
+    webgl: [
+      {
+        vendor: "Google Inc. (NVIDIA)",
+        renderer:
+          "ANGLE (NVIDIA, NVIDIA GeForce RTX 4090 (0x00002684) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      },
+      {
+        vendor: "Google Inc. (NVIDIA)",
+        renderer:
+          "ANGLE (NVIDIA, NVIDIA GeForce RTX 4080 SUPER (0x00002703) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      },
+    ],
+    hardwareConcurrency: [16, 24, 32],
     deviceMemory: [32, 64],
   },
   {
@@ -931,7 +1056,7 @@ const LOCALES: ReadonlyArray<LocaleGroup> = [
     id: "uk-UA",
     label: "Українська (Україна)",
     locale: "uk-UA",
-    languages: ["uk-UA", "uk", "ru", "en"],
+    languages: ["uk-UA", "uk", "en-US", "en"],
     country: "ua",
     timezones: ["Europe/Kyiv"],
   },
@@ -1295,15 +1420,15 @@ export function localeCatalog(): ReadonlyArray<LocaleCatalogEntry> {
  * If `seed` is provided, the result is deterministic — useful so existing
  * profiles get a stable fingerprint on every read.
  */
-export function generateFingerprint(seed?: string): FingerprintConfig {
+export function generateFingerprint(
+  seed?: string,
+  targetPlatform?: "mac" | "macos" | "windows" | "linux",
+): FingerprintConfig {
   const rand = seed ? seededRand(seed) : Math.random;
-  // Device family must match the host OS — claiming Windows on a Mac
-  // binary is detectable via V8/Blink/CSS-feature signatures (browserscan,
-  // FingerprintJS, DataDome all compare actual platform behaviour vs the
-  // claimed UA platform). Cross-platform spoof would require shipping a
-  // separate Chromium binary per target OS, which we don't yet do.
-  const hostFamily = hostPlatformFamily();
-  const candidates = DEVICES.filter((d) => deviceMatchesHost(d, hostFamily));
+  const platform = targetPlatform
+    ? (targetPlatform === "macos" ? "mac" : targetPlatform)
+    : hostPlatformFamily();
+  const candidates = DEVICES.filter((d) => deviceMatchesHost(d, platform));
   const device = pick(candidates.length > 0 ? candidates : DEVICES, rand);
   const locale = pick(LOCALES, rand);
   const screen = pick(device.screens, rand);
